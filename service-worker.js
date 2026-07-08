@@ -1,4 +1,4 @@
-const CACHE_NAME = "socal-tacos-kiosk-v1";
+const CACHE_NAME = "socal-tacos-kiosk-v2";
 const APP_FILES = [
   "./",
   "./index.html",
