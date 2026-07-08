@@ -49,6 +49,8 @@ let cart = [];
 let submittedOrders = [];
 let lastOrder = null;
 let pendingToppingItemId = null;
+const categorySlideIndexes = {};
+let activeCustomerCategory = null;
 
 const money = value => value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 const $ = selector => document.querySelector(selector);
@@ -296,13 +298,45 @@ function refreshMenuViews() {
 
 function renderMenu() {
   const menuGrid = $("#menuGrid");
-  menuGrid.classList.add("stage-overview");
+  menuGrid.classList.add("stage-overview", "category-columns");
   menuGrid.classList.remove("stage-category");
 
   const visibleItems = orderedMenuItems();
+  const categories = orderedCategories();
 
-  menuGrid.innerHTML = visibleItems.map((item, index) => `
-    <article class="menu-card ${item.outOfStock ? "is-disabled" : ""}" style="animation-delay: ${index * 45}ms">
+  if (activeCustomerCategory && categories.includes(activeCustomerCategory)) {
+    const categoryItems = visibleItems.filter(item => item.category === activeCustomerCategory);
+    menuGrid.classList.remove("category-columns");
+    menuGrid.classList.add("stage-category", "category-item-grid");
+    menuGrid.innerHTML = `
+      <button class="category-back" type="button" data-close-category="true">&lsaquo; All Categories</button>
+      <h3 class="category-view-title">${escapeHtml(activeCustomerCategory)}</h3>
+      ${categoryItems.map((item, index) => menuItemCardMarkup(item, index)).join("")}
+    `;
+    return;
+  }
+
+  activeCustomerCategory = null;
+  menuGrid.classList.remove("stage-category", "category-item-grid");
+  menuGrid.innerHTML = categories.map((category, categoryIndex) => {
+    const items = visibleItems.filter(item => item.category === category);
+    const currentIndex = (categorySlideIndexes[category] || 0) % items.length;
+    const item = items[currentIndex];
+
+    return `
+      <button class="category-showcase" type="button" data-open-category="${escapeHtml(category)}" style="animation-delay: ${categoryIndex * 55}ms">
+        <span class="category-preview"><img src="${escapeHtml(imageForItem(item))}" alt=""></span>
+        <span class="category-showcase-name">${escapeHtml(category)}</span>
+        <span class="category-showcase-count">${items.length} item${items.length === 1 ? "" : "s"}</span>
+        <span class="slide-dots" aria-hidden="true">${items.map((unused, index) => `<i class="${index === currentIndex ? "active" : ""}"></i>`).join("")}</span>
+      </button>
+    `;
+  }).join("");
+}
+
+function menuItemCardMarkup(item, index) {
+  return `
+    <article class="menu-card ${item.outOfStock ? "is-disabled" : ""}" style="animation-delay: ${index * 35}ms">
       ${imageMarkup(imageForItem(item), "menu-photo", "Photo")}
       <div class="menu-card-body">
         ${item.badge ? `<span class="menu-badge">${escapeHtml(item.badge)}</span>` : ""}
@@ -311,14 +345,13 @@ function renderMenu() {
         ${item.outOfStock ? `<p class="stock-note">Out of stock</p>` : ""}
         ${item.tacoMix ? `<p class="item-detail">Choose 3 meats</p>` : ""}
         ${item.variants?.length ? `<p class="item-detail">Choose a size</p>` : ""}
-        ${itemToppingCategories(item).length ? `<p class="item-detail">${itemToppingCategories(item).length} option group${itemToppingCategories(item).length === 1 ? "" : "s"}</p>` : ""}
       </div>
       <div class="menu-card-footer">
         <span class="price">${priceText(item)}</span>
         <button class="add-button" data-add="${item.id}" ${item.outOfStock ? "disabled" : ""}>${item.outOfStock ? "Out" : "Add"}</button>
       </div>
     </article>
-  `).join("");
+  `;
 }
 
 function priceText(item) {
@@ -1035,8 +1068,18 @@ document.addEventListener("click", event => {
   const moveCategory = event.target.dataset.moveCategory;
   const moveDirection = event.target.dataset.moveDirection;
   const removeToppingCategoryId = event.target.dataset.removeToppingCategory;
+  const openCategory = event.target.closest("[data-open-category]")?.dataset.openCategory;
+  const closeCategory = event.target.dataset.closeCategory;
 
   if (addId) addToCart(addId);
+  if (openCategory) {
+    activeCustomerCategory = openCategory;
+    renderMenu();
+  }
+  if (closeCategory) {
+    activeCustomerCategory = null;
+    renderMenu();
+  }
   if (increaseId) changeQty(increaseId, 1);
   if (decreaseId) changeQty(decreaseId, -1);
   if (moveItemId) moveOwnerItem(moveItemId, moveDirection);
@@ -1088,6 +1131,17 @@ $("#printLastBtn").addEventListener("click", () => {
 refreshMenuViews();
 renderCart();
 renderSubmittedOrders();
+
+setInterval(() => {
+  if ($("#orderPage").classList.contains("hidden") || activeCustomerCategory) return;
+  orderedCategories().forEach(category => {
+    const itemCount = menuItems.filter(item => item.category === category).length;
+    if (itemCount > 1) {
+      categorySlideIndexes[category] = ((categorySlideIndexes[category] || 0) + 1) % itemCount;
+    }
+  });
+  renderMenu();
+}, 8000);
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
   navigator.serviceWorker.register("./service-worker.js").catch(() => {});
