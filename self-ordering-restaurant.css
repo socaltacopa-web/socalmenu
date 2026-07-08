@@ -22,6 +22,7 @@
 
 body {
   margin: 0;
+  min-height: 100dvh;
   font-family: Arial, Helvetica, sans-serif;
   color: var(--ink);
   background:
@@ -950,14 +951,25 @@ textarea {
 }
 
 @media (min-width: 901px) and (max-width: 1194px) and (orientation: landscape) {
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+
   .topbar {
-    min-height: 66px;
-    padding: 7px 14px;
+    min-height: 58px;
+    padding:
+      max(5px, env(safe-area-inset-top))
+      max(12px, env(safe-area-inset-right))
+      5px
+      max(12px, env(safe-area-inset-left));
   }
 
   .brand-logo {
-    width: 112px;
-    height: 48px;
+    width: 102px;
+    height: 42px;
   }
 
   .topbar h1 {
@@ -965,31 +977,39 @@ textarea {
   }
 
   .app-shell {
-    grid-template-columns: minmax(0, 1fr) 292px;
-    gap: 10px;
-    height: calc(100vh - 69px);
-    padding: 9px 12px;
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 7px;
+    height: calc(100dvh - 58px);
+    padding:
+      6px
+      max(8px, env(safe-area-inset-right))
+      max(6px, env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
   }
 
   .menu-area,
   .order-panel {
-    padding: 9px;
+    padding: 6px;
   }
 
   .menu-grid,
   .menu-grid.stage-overview {
-    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
-    gap: 7px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr);
+    gap: 4px;
+    height: calc(100% - 36px);
   }
 
   .menu-card {
-    min-height: 126px;
+    min-width: 0;
+    min-height: 0;
   }
 
   .menu-photo {
-    height: 58px;
+    height: clamp(30px, 4.8vh, 38px);
     max-height: none;
     aspect-ratio: auto;
+    flex: 0 0 auto;
   }
 
   .menu-photo img,
@@ -1002,12 +1022,13 @@ textarea {
   }
 
   .menu-card-body {
-    padding: 6px 7px 0;
+    min-width: 0;
+    padding: 3px 4px 0;
   }
 
   .menu-card h3 {
-    font-size: .78rem;
-    line-height: 1.08;
+    font-size: .66rem;
+    line-height: 1.05;
   }
 
   .menu-card .item-detail {
@@ -1015,7 +1036,7 @@ textarea {
   }
 
   .menu-card-footer {
-    padding: 0 7px 7px;
+    padding: 0 4px 4px;
   }
 
   .price {
@@ -1024,16 +1045,16 @@ textarea {
 
   .add-button,
   .primary-button {
-    min-height: 28px;
-    font-size: .72rem;
+    min-height: 23px;
+    font-size: .65rem;
   }
 
   .order-list {
-    max-height: 142px;
+    max-height: 120px;
   }
 
   textarea {
-    min-height: 44px;
+    min-height: 36px;
   }
 }
 

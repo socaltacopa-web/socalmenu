@@ -1088,3 +1088,7 @@ $("#printLastBtn").addEventListener("click", () => {
 refreshMenuViews();
 renderCart();
 renderSubmittedOrders();
+
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+}
