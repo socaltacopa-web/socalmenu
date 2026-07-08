@@ -488,6 +488,22 @@ textarea {
   font-weight: 700;
 }
 
+.taco-mix-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.taco-mix-choice {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.choice-help {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: .84rem;
+  line-height: 1.3;
+}
+
 .item-choice-panel {
   margin-top: 10px;
 }
@@ -933,6 +949,94 @@ textarea {
   }
 }
 
+@media (min-width: 901px) and (max-width: 1194px) and (orientation: landscape) {
+  .topbar {
+    min-height: 66px;
+    padding: 7px 14px;
+  }
+
+  .brand-logo {
+    width: 112px;
+    height: 48px;
+  }
+
+  .topbar h1 {
+    font-size: 1.28rem;
+  }
+
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr) 292px;
+    gap: 10px;
+    height: calc(100vh - 69px);
+    padding: 9px 12px;
+  }
+
+  .menu-area,
+  .order-panel {
+    padding: 9px;
+  }
+
+  .menu-grid,
+  .menu-grid.stage-overview {
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    gap: 7px;
+  }
+
+  .menu-card {
+    min-height: 126px;
+  }
+
+  .menu-photo {
+    height: 58px;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
+  .menu-photo img,
+  .owner-thumb img,
+  .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .menu-card-body {
+    padding: 6px 7px 0;
+  }
+
+  .menu-card h3 {
+    font-size: .78rem;
+    line-height: 1.08;
+  }
+
+  .menu-card .item-detail {
+    font-size: .6rem;
+  }
+
+  .menu-card-footer {
+    padding: 0 7px 7px;
+  }
+
+  .price {
+    font-size: .72rem;
+  }
+
+  .add-button,
+  .primary-button {
+    min-height: 28px;
+    font-size: .72rem;
+  }
+
+  .order-list {
+    max-height: 142px;
+  }
+
+  textarea {
+    min-height: 44px;
+  }
+}
+
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -977,6 +1081,10 @@ textarea {
   }
 
   .edit-item-form {
+    grid-template-columns: 1fr;
+  }
+
+  .taco-mix-list {
     grid-template-columns: 1fr;
   }
 }

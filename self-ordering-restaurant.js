@@ -1,24 +1,38 @@
 const defaultMenuItems = [
-  { id: "homemade-drinks", name: "32oz homemade drinks", category: "DRINKS", price: 4, desc: "Fresh handmade agua frescas blended with real fruit and sweetened with fresh cane sugar.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AIIOTSGQNEBBLTYAJ5VU4KBL.jpeg?width=640&optimize=medium", toppingCategoryIds: ["agua-frescas"] },
-  { id: "breakfast-taco", name: "Breakfast taco", category: "BREAKFAST", price: 3, desc: "Breakfast taco from the SoCal Tacos menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/UM5UDPOAYLWJQIVT7K6TO3MB.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], outOfStock: true },
-  { id: "breakfast-burrito", name: "Breakfast burrito", category: "BREAKFAST", price: 8, desc: "Breakfast burrito from the SoCal Tacos menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], outOfStock: true },
+  { id: "can-drink", name: "Can Drink", category: "DRINKS", price: 1, desc: "Cold canned drink.", image: "", variants: [{ name: "Can", price: 1 }, { name: "Glass Bottle", price: 3 }] },
+  { id: "homemade-drinks", name: "Homemade Lemonade / Agua Fresca", category: "DRINKS", price: 4, desc: "Fresh handmade agua frescas and homemade lemonade.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AIIOTSGQNEBBLTYAJ5VU4KBL.jpeg?width=640&optimize=medium", toppingCategoryIds: ["agua-frescas"] },
+  { id: "breakfast-taco", name: "Breakfast taco", category: "BREAKFAST", price: 4.5, desc: "Breakfast taco from the SoCal Tacos breakfast menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/UM5UDPOAYLWJQIVT7K6TO3MB.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "breakfast-burrito", name: "Breakfast burrito", category: "BREAKFAST", price: 8, desc: "Breakfast burrito from the SoCal Tacos breakfast menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "quesadilla", name: "Quesadilla", category: "LUNCH", price: 7, desc: "Plain or loaded quesadilla.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "Plain", price: 7 }, { name: "Loaded", price: 14 }] },
   { id: "pork-taco", name: "Pork taco", category: "LUNCH", price: 13, desc: "Three tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/QS2LHOTOLEK64X5NHSKB3VCS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "chicken-taco", name: "Chicken taco", category: "LUNCH", price: 13, desc: "Three chicken tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LNXII34WYGXEFLEWWHRU4NBA.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "mix-three-tacos", name: "Mix 3 Tacos", category: "LUNCH", price: 13, desc: "Choose any three taco meats. The plate price matches the highest priced meat selected.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], tacoMix: true, tacoChoices: [{ name: "Pork", price: 13 }, { name: "Chicken", price: 13 }, { name: "Chorizo", price: 15 }, { name: "Al pastor", price: 15 }, { name: "Vegan chorizo", price: 15 }, { name: "Lengua", price: 16 }, { name: "Barbacoa beef cheeks", price: 16 }, { name: "Lamb birria", price: 18 }, { name: "Shrimp and steak", price: 18 }, { name: "Steak", price: 18 }] },
   { id: "chorizo-taco", name: "Chorizo taco", category: "LUNCH", price: 15, desc: "Three chorizo tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/RLK4VMZBHH3YPI73KFYLMKMM.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "al-pastor-tacos", name: "Al pastor tacos", category: "LUNCH", price: 15, desc: "Three al pastor tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ZQFFEBTTRQL6PERXUP7HGWC7.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "vegan-chorizo-tacos", name: "Vegan chorizo tacos", category: "LUNCH", price: 15, desc: "Three vegan chorizo tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L67FL2ATZQSUAGLNJNUABZC3.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "vegan-chorizo-tacos", name: "Vegan chorizo tacos", category: "LUNCH", price: 16, desc: "Three vegan chorizo tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L67FL2ATZQSUAGLNJNUABZC3.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "ground-beef-tacos", name: "Ground Beef tacos", category: "LUNCH", price: 15, desc: "Three ground beef tacos with your choice of SoCal toppings.", image: "", toppingCategoryIds: ["taco-toppings"] },
   { id: "lengua-tacos", name: "(Lengua) beef Tongue tacos", category: "LUNCH", price: 16, desc: "Three lengua tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CK476NVFAZAHSSFDGS4T35S6.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], badge: "Sale" },
   { id: "la-dog", name: "La dog", category: "LUNCH", price: 6, desc: "SoCal-style LA dog.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" },
+  { id: "cali-burger", name: "Cali Burger", category: "BURGERS", price: 13, desc: "Comes with animal fries or plain fries. Full size has 3 patties, avocado, lettuce, tomato, grilled onions, and cheese.", image: "", toppingCategoryIds: ["burger-toppings"], variants: [{ name: "JR Cali Burger", price: 13 }, { name: "Cali Burger", price: 16 }] },
+  { id: "socal-bowl", name: "SoCal Bowl", category: "BOWLS", price: 13, desc: "Rice, beans, toppings, guac, and any meat. Add steak, lamb, or shrimp for $4.", image: "", toppingCategoryIds: ["bowl-toppings"], variants: [{ name: "Any meat", price: 13 }, { name: "Steak, lamb, or shrimp", price: 17 }] },
   { id: "lamb-birria-taco", name: "Lamb birria Taco", category: "LUNCH", price: 18, desc: "Three lamb birria tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CXB3QK7QRCF6INZUPGE35VI5.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "shrimp-steak-tacos", name: "Shrimp and steak tacos", category: "LUNCH", price: 18, desc: "Three shrimp and steak tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/7MLVGRNLW6CBAWXV5BUWCNKS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "steak-tacos", name: "Steak tacos 3x", category: "LUNCH", price: 18, desc: "Three steak tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], outOfStock: true },
+  { id: "steak-tacos", name: "Steak tacos 3x", category: "LUNCH", price: 18, desc: "Three steak tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "small-tacos", name: "Small Tacos", category: "LUNCH", price: 10, desc: "Three small tacos. Choose chicken, pork, chorizo, ground beef, or steak.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "Chicken", price: 10 }, { name: "Pork", price: 10 }, { name: "Chorizo", price: 10 }, { name: "Ground Beef", price: 10 }, { name: "Steak", price: 12 }] },
+  { id: "burritos", name: "Burritos", category: "BURRITOS", price: 11, desc: "Choose JR, small, or large burrito with your meat.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "JR Chicken/Pork", price: 11 }, { name: "JR Chorizo/Ground Beef/Al Pastor", price: 12 }, { name: "JR Barbacoa/Tongue", price: 13 }, { name: "JR Steak/Lamb/Steak and Shrimp", price: 15 }, { name: "Small Chicken/Pork", price: 12 }, { name: "Small Chorizo/Ground Beef/Al Pastor", price: 13 }, { name: "Small Barbacoa/Tongue", price: 14 }, { name: "Small Steak/Lamb/Steak and Shrimp", price: 16 }, { name: "Large Chicken/Pork", price: 16 }, { name: "Large Chorizo/Ground Beef/Al Pastor", price: 17 }, { name: "Large Barbacoa/Tongue", price: 19 }, { name: "Large Steak/Lamb/Steak and Shrimp", price: 20 }] },
+  { id: "asada-fries", name: "Asada Fries", category: "FRIES", price: 13, desc: "Crispy fries topped with carne asada, cheese, pico, salsa, sour cream, and guac. Available with any meats.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "Regular", price: 13 }, { name: "Premium meat", price: 18 }] },
+  { id: "doritos-asada", name: "Doritos Asada", category: "LUNCH", price: 13, desc: "Doritos, carne asada, cheese, pico, and guac.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "Regular", price: 13 }, { name: "Premium meat", price: 18 }] },
   { id: "street-corn", name: "Street corn", category: "SIDES", price: 6, desc: "Street corn from the SoCal Tacos menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/WM6WF22MK2VDFYBNB272YSD5.jpeg?width=640&optimize=medium" },
-  { id: "barbacoa-beef-cheeks", name: "barbacoa beef cheeks 3x", category: "LUNCH", price: 16, desc: "Three barbacoa beef cheek tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LXS7VB2T5ZTBFACNLESBXGTI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], outOfStock: true },
+  { id: "rice-beans", name: "Rice & Beans", category: "SIDES", price: 5, desc: "Side of rice and beans.", image: "", toppingCategoryIds: ["bowl-toppings"] },
+  { id: "plain-fries", name: "Plain Fries", category: "SIDES", price: 5, desc: "Plain crispy fries.", image: "", toppingCategoryIds: ["burger-toppings"] },
+  { id: "barbacoa-beef-cheeks", name: "barbacoa beef cheeks 3x", category: "LUNCH", price: 16, desc: "Three barbacoa beef cheek tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LXS7VB2T5ZTBFACNLESBXGTI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "guacamole-chips", name: "Guacamole and chips", category: "SIDES", price: 5, desc: "Fresh, creamy guacamole made with real avocados, lime, and a pinch of spice.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ULDOA6QPOJG4TP2HLQAGL2LH.jpeg?width=640&optimize=medium", variants: [{ name: "5oz", price: 5 }, { name: "16oz", price: 7 }], badge: "Sale" }
 ];
 
 const defaultToppingCategories = [
   { id: "taco-toppings", name: "Toppings", options: ["corn tortilla Shell", "flour tortilla Shell", "Romain Lettuce Leaf Shell", "cilantro", "melted chesse", "lime", "White Onions", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", "sour cream", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
+  { id: "burger-toppings", name: "Burger Toppings", options: ["lettuce", "tomato", "White Onions", "grilled onions", "cheese", "sour cream", "Mild salsa", "Spicy Habanero", { name: "5oz Small Guacamole And Chips", price: 5 }] },
+  { id: "bowl-toppings", name: "Bowl Toppings", options: ["rice", "beans", "cilantro", "White Onions", "lettuce", "cheese", "sour cream", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
   { id: "agua-frescas", name: "Agua Frescas", options: ["Watermelon", "Pineapple", "Mango", "Horchata", "Guava"] }
 ];
 
@@ -28,9 +42,9 @@ const categoryOrderStorageKey = "counterserveCategoryOrder";
 const menuVersionKey = "counterserveMenuVersion";
 const currentMenuVersion = "socal-tacos-menu-2026-07-05";
 const taxRate = 0.0825;
-let menuItems = loadMenuItems();
-let toppingCategories = loadToppingCategories();
-let categoryOrder = loadCategoryOrder();
+let menuItems;
+let toppingCategories;
+let categoryOrder;
 let cart = [];
 let submittedOrders = [];
 let lastOrder = null;
@@ -48,24 +62,52 @@ const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({
 const imageMarkup = (src, className, fallbackText) => src
   ? `<div class="${className}"><img src="${escapeHtml(src)}" alt=""></div>`
   : `<div class="${className}" aria-hidden="true">${fallbackText}</div>`;
+const fallbackImages = [
+  { keywords: ["drink", "agua", "horchata", "mango", "watermelon", "pineapple", "guava"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AIIOTSGQNEBBLTYAJ5VU4KBL.jpeg?width=640&optimize=medium" },
+  { keywords: ["burger"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" },
+  { keywords: ["bowl"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/7MLVGRNLW6CBAWXV5BUWCNKS.jpeg?width=640&optimize=medium" },
+  { keywords: ["burrito"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium" },
+  { keywords: ["dog", "hot dog"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" },
+  { keywords: ["fries", "doritos"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium" },
+  { keywords: ["corn", "elote"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/WM6WF22MK2VDFYBNB272YSD5.jpeg?width=640&optimize=medium" },
+  { keywords: ["guac", "chips"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ULDOA6QPOJG4TP2HLQAGL2LH.jpeg?width=640&optimize=medium" },
+  { keywords: ["steak", "mix", "taco", "lunch"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium" },
+  { keywords: ["breakfast"], src: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/UM5UDPOAYLWJQIVT7K6TO3MB.jpeg?width=640&optimize=medium" }
+];
+const fallbackImageForItem = item => {
+  const searchText = `${item.name || ""} ${item.category || ""} ${item.desc || ""}`.toLowerCase();
+  return fallbackImages.find(fallback => fallback.keywords.some(keyword => searchText.includes(keyword)))?.src || "socal-tacos-logo-cropped.png";
+};
+const imageForItem = item => item.image || fallbackImageForItem(item);
+
+menuItems = loadMenuItems();
+toppingCategories = loadToppingCategories();
+categoryOrder = loadCategoryOrder();
 
 function loadMenuItems() {
-  if (localStorage.getItem(menuVersionKey) !== currentMenuVersion) return normalizeMenuItems(defaultMenuItems);
   const savedItems = localStorage.getItem(menuStorageKey);
-  if (!savedItems) return normalizeMenuItems(defaultMenuItems);
-
-  try {
-    const parsedItems = JSON.parse(savedItems);
-    const normalizedItems = Array.isArray(parsedItems) && parsedItems.length > 0 ? normalizeMenuItems(parsedItems) : normalizeMenuItems(defaultMenuItems);
-    const mergedItems = combineCaliBurgerSizes(normalizedItems);
-    if (mergedItems.changed) {
-      localStorage.setItem(menuStorageKey, JSON.stringify(mergedItems.items));
-      localStorage.setItem(menuVersionKey, currentMenuVersion);
-    }
-    return mergedItems.items;
-  } catch {
-    return normalizeMenuItems(defaultMenuItems);
+  if (!savedItems) {
+    const starterItems = fillMissingItemImages(normalizeMenuItems(defaultMenuItems)).items;
+    localStorage.setItem(menuStorageKey, JSON.stringify(starterItems));
+    localStorage.setItem(menuVersionKey, currentMenuVersion);
+    return starterItems;
   }
+
+  let parsedItems = [];
+  try {
+    parsedItems = JSON.parse(savedItems);
+  } catch {
+    parsedItems = [];
+  }
+
+  const normalizedItems = Array.isArray(parsedItems) && parsedItems.length > 0 ? normalizeMenuItems(parsedItems) : normalizeMenuItems(defaultMenuItems);
+  const starterUpdatedItems = applyStarterMenuUpdates(normalizedItems);
+  const updatedItems = addMissingStarterItems(starterUpdatedItems);
+  const mergedItems = combineCaliBurgerSizes(updatedItems.items);
+  const imageItems = fillMissingItemImages(mergedItems.items);
+  localStorage.setItem(menuStorageKey, JSON.stringify(imageItems.items));
+  localStorage.setItem(menuVersionKey, currentMenuVersion);
+  return imageItems.items;
 }
 
 function combineCaliBurgerSizes(items) {
@@ -115,14 +157,51 @@ function normalizeMenuItems(items) {
   });
 }
 
+function applyStarterMenuUpdates(items) {
+  return items.map(item => {
+    const starterItem = defaultMenuItems.find(defaultItem => defaultItem.id === item.id);
+    if (!starterItem) return item;
+    const updatedItem = {
+      ...item,
+      ...starterItem,
+      image: item.image || starterItem.image
+    };
+    if (!starterItem.badge) delete updatedItem.badge;
+    if (!starterItem.outOfStock) delete updatedItem.outOfStock;
+    return updatedItem;
+  });
+}
+
+function addMissingStarterItems(items) {
+  const additions = defaultMenuItems
+    .filter(defaultItem => !items.some(item => item.id === defaultItem.id));
+  if (!additions.length) return { items, changed: false };
+
+  const nextItems = [...items, ...additions];
+  return { items: nextItems, changed: true };
+}
+
+function fillMissingItemImages(items) {
+  let changed = false;
+  const filledItems = items.map(item => {
+    if (item.image) return item;
+    changed = true;
+    return { ...item, image: fallbackImageForItem(item) };
+  });
+  return { items: filledItems, changed };
+}
+
 function loadToppingCategories() {
-  if (localStorage.getItem(menuVersionKey) !== currentMenuVersion) return [...defaultToppingCategories];
   const savedCategories = localStorage.getItem(toppingStorageKey);
   if (!savedCategories) return [...defaultToppingCategories];
 
   try {
     const parsedCategories = JSON.parse(savedCategories);
-    return Array.isArray(parsedCategories) ? parsedCategories : [...defaultToppingCategories];
+    if (!Array.isArray(parsedCategories)) return [...defaultToppingCategories];
+    return [
+      ...parsedCategories,
+      ...defaultToppingCategories.filter(defaultCategory => !parsedCategories.some(category => category.id === defaultCategory.id))
+    ];
   } catch {
     return [...defaultToppingCategories];
   }
@@ -130,7 +209,6 @@ function loadToppingCategories() {
 
 function loadCategoryOrder() {
   const defaultOrder = uniqueCategories(defaultMenuItems);
-  if (localStorage.getItem(menuVersionKey) !== currentMenuVersion) return defaultOrder;
   const savedOrder = localStorage.getItem(categoryOrderStorageKey);
   if (!savedOrder) return defaultOrder;
 
@@ -225,12 +303,13 @@ function renderMenu() {
 
   menuGrid.innerHTML = visibleItems.map((item, index) => `
     <article class="menu-card ${item.outOfStock ? "is-disabled" : ""}" style="animation-delay: ${index * 45}ms">
-      ${imageMarkup(item.image, "menu-photo", "Photo")}
+      ${imageMarkup(imageForItem(item), "menu-photo", "Photo")}
       <div class="menu-card-body">
         ${item.badge ? `<span class="menu-badge">${escapeHtml(item.badge)}</span>` : ""}
         <h3>${escapeHtml(item.name)}</h3>
         <p class="item-description">${escapeHtml(item.desc)}</p>
         ${item.outOfStock ? `<p class="stock-note">Out of stock</p>` : ""}
+        ${item.tacoMix ? `<p class="item-detail">Choose 3 meats</p>` : ""}
         ${item.variants?.length ? `<p class="item-detail">Choose a size</p>` : ""}
         ${itemToppingCategories(item).length ? `<p class="item-detail">${itemToppingCategories(item).length} option group${itemToppingCategories(item).length === 1 ? "" : "s"}</p>` : ""}
       </div>
@@ -243,6 +322,10 @@ function renderMenu() {
 }
 
 function priceText(item) {
+  if (item.tacoMix && item.tacoChoices?.length) {
+    const prices = item.tacoChoices.map(choice => choice.price);
+    return `${money(Math.min(...prices))} - ${money(Math.max(...prices))}`;
+  }
   if (item.variants?.length) {
     const prices = item.variants.map(variant => variant.price);
     return `${money(Math.min(...prices))} - ${money(Math.max(...prices))}`;
@@ -472,7 +555,7 @@ function renderOwnerTools() {
 
   $("#ownerItemList").innerHTML = menuItems.map((item, index) => `
     <article class="owner-item">
-      ${imageMarkup(item.image, "owner-thumb", "No photo")}
+      ${imageMarkup(imageForItem(item), "owner-thumb", "No photo")}
       <div>
         <h3>${escapeHtml(item.name)}</h3>
         <p>${escapeHtml(item.category)} - ${money(item.price)}</p>
@@ -634,8 +717,8 @@ function openEditItem(itemId) {
   $("#editItemImageFile").value = "";
   $("#editItemOutOfStock").checked = Boolean(item.outOfStock);
   $("#editItemVariants").value = variantLines(item.variants);
-  $("#editImagePreview").innerHTML = item.image
-    ? `<img src="${escapeHtml(item.image)}" alt="Selected menu item preview">`
+  $("#editImagePreview").innerHTML = imageForItem(item)
+    ? `<img src="${escapeHtml(imageForItem(item))}" alt="Selected menu item preview">`
     : "No picture selected";
   $("#editToppingChoices").innerHTML = toppingCategories.length
     ? toppingCategories.map(category => `
@@ -683,7 +766,7 @@ async function saveEditedItem(event) {
     category,
     price,
     desc,
-    image,
+    image: image || fallbackImageForItem({ ...existingItem, name, category, desc }),
     toppingCategoryIds,
     badge: $("#editItemBadge").value.trim(),
     outOfStock: $("#editItemOutOfStock").checked,
@@ -723,7 +806,7 @@ async function addOwnerItem(event) {
   const id = `${baseId}-${Date.now().toString().slice(-5)}`;
   const toppingCategoryIds = [...document.querySelectorAll("#ownerToppingChoices input:checked")]
     .map(input => input.value);
-  menuItems.push({ id, name, category, price, desc, image, toppingCategoryIds });
+  menuItems.push({ id, name, category, price, desc, image: image || fallbackImageForItem({ name, category, desc }), toppingCategoryIds });
   if (!saveMenuItems()) {
     menuItems = menuItems.filter(item => item.id !== id);
     return;
@@ -832,6 +915,26 @@ function resetMenu() {
 function openToppingModal(item) {
   pendingToppingItemId = item.id;
   $("#toppingModalTitle").textContent = `Choose toppings for ${item.name}`;
+  const tacoMixMarkup = item.tacoMix ? `
+    <section class="topping-group">
+      <h3>Choose 3 taco meats</h3>
+      <div class="choice-list taco-mix-list">
+        ${[1, 2, 3].map(number => `
+          <label class="taco-mix-choice">
+            Taco ${number}
+            <select name="tacoMixChoice">
+              ${(item.tacoChoices || []).map(choice => `
+                <option value="${escapeHtml(choice.name)}" data-price="${choice.price}">
+                  ${escapeHtml(choice.name)} - ${money(choice.price)}
+                </option>
+              `).join("")}
+            </select>
+          </label>
+        `).join("")}
+      </div>
+      <p class="choice-help">The plate price becomes the highest priced meat selected.</p>
+    </section>
+  ` : "";
   const variantMarkup = item.variants?.length ? `
     <section class="topping-group">
       <h3>Select an option</h3>
@@ -846,7 +949,7 @@ function openToppingModal(item) {
     </section>
   ` : "";
 
-  $("#toppingModalBody").innerHTML = variantMarkup + itemToppingCategories(item).map(category => `
+  $("#toppingModalBody").innerHTML = tacoMixMarkup + variantMarkup + itemToppingCategories(item).map(category => `
     <section class="topping-group">
       <h3>${escapeHtml(category.name)}</h3>
       <div class="choice-list">
@@ -882,10 +985,35 @@ function submitToppings(event) {
     options: [...document.querySelectorAll(`#toppingModalBody input[data-category-id="${category.id}"]:checked`)]
       .map(input => ({ name: input.value, price: Number(input.dataset.price || 0) }))
   }));
+  const tacoMixVariant = item.tacoMix ? selectedTacoMixVariant(item) : null;
+  if (item.tacoMix && !tacoMixVariant) {
+    alert("Choose all 3 taco meats first.");
+    return;
+  }
+
   const variantInput = document.querySelector(`#toppingModalBody input[name="itemVariant"]:checked`);
-  const variant = variantInput ? { name: variantInput.value, price: Number(variantInput.dataset.price || item.price) } : null;
+  const variant = tacoMixVariant || (variantInput ? { name: variantInput.value, price: Number(variantInput.dataset.price || item.price) } : null);
   addConfiguredItemToCart(item, selectedToppings, variant);
   closeToppingModal();
+}
+
+function selectedTacoMixVariant(item) {
+  const selects = [...document.querySelectorAll(`#toppingModalBody select[name="tacoMixChoice"]`)];
+  if (selects.length !== 3) return null;
+
+  const choices = selects.map(select => {
+    const selectedOption = select.selectedOptions[0];
+    return {
+      name: select.value,
+      price: Number(selectedOption?.dataset.price || item.price || 0)
+    };
+  });
+
+  if (choices.some(choice => !choice.name || Number.isNaN(choice.price))) return null;
+  return {
+    name: `Meats: ${choices.map(choice => choice.name).join(", ")}`,
+    price: Math.max(...choices.map(choice => choice.price))
+  };
 }
 
 function showPage(pageName) {
