@@ -1113,10 +1113,12 @@ textarea {
   .menu-grid,
   .menu-grid.stage-overview {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     grid-auto-rows: minmax(0, 1fr);
-    gap: 4px;
+    gap: 6px;
     min-height: 0;
     height: auto;
+    width: 100%;
     flex: 1 1 auto;
   }
 
@@ -1126,12 +1128,16 @@ textarea {
   }
 
   .category-preview {
-    height: 96px;
-    min-height: 96px;
+    height: auto;
+    min-height: 0;
     max-height: none;
     aspect-ratio: auto;
-    flex: 0 0 auto;
+    flex: 1 1 0;
     background: #08090d;
+  }
+
+  .menu-grid.category-item-grid {
+    grid-template-rows: 30px repeat(4, minmax(0, 1fr));
   }
 
   .menu-photo img {
