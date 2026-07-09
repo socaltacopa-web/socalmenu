@@ -309,7 +309,7 @@ function renderMenu() {
     menuGrid.classList.remove("category-columns");
     menuGrid.classList.add("stage-category", "category-item-grid");
     menuGrid.innerHTML = `
-      <button class="category-back" type="button" data-close-category="true">&lsaquo; All Categories</button>
+      <button class="category-back" type="button" data-close-category="true">&lsaquo; BACK TO CATEGORIES</button>
       <h3 class="category-view-title">${escapeHtml(activeCustomerCategory)}</h3>
       ${categoryItems.map((item, index) => menuItemCardMarkup(item, index)).join("")}
     `;
