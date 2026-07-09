@@ -211,7 +211,7 @@ textarea {
 }
 
 .category-columns {
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 .category-showcase {
@@ -228,6 +228,7 @@ textarea {
   overflow: hidden;
   animation: cardArrive .38s ease both;
   cursor: pointer;
+  min-height: 260px;
   text-align: left;
 }
 
@@ -238,7 +239,7 @@ textarea {
 .category-preview {
   width: 100%;
   min-height: 0;
-  flex: 1 1 auto;
+  flex: 1 1 74%;
   overflow: hidden;
   background: #08090d;
 }
@@ -430,6 +431,15 @@ textarea {
 .add-button:hover,
 .primary-button:hover {
   background: var(--accent-dark);
+}
+
+.checkout-form > .primary-button {
+  width: 100%;
+  min-height: 68px;
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(238, 34, 148, .32);
+  font-size: 1.12rem;
+  letter-spacing: 0;
 }
 
 .add-button:disabled:hover {
@@ -836,9 +846,23 @@ textarea {
   display: none !important;
 }
 
+.history-page {
+  min-height: calc(100dvh - 76px);
+  padding: 18px;
+}
+
+.history-panel {
+  max-width: 1180px;
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(12, 13, 20, .94);
+  padding: 18px;
+}
+
 .submitted-orders {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
   gap: 12px;
 }
 
@@ -853,9 +877,53 @@ textarea {
   margin: 0 0 8px;
 }
 
+.submitted-card-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.submitted-card-header > strong {
+  color: var(--cyan);
+  font-size: 1.25rem;
+}
+
 .submitted-card p {
   margin: 4px 0;
   color: var(--muted);
+}
+
+.history-items {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.history-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 10px;
+  border-radius: 7px;
+  background: #090a0f;
+  padding: 10px;
+}
+
+.history-line span {
+  font-weight: 800;
+}
+
+.history-line small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.history-notes {
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
 }
 
 .submitted-card button {
@@ -968,6 +1036,20 @@ textarea {
     min-height: 0;
   }
 
+  .menu-grid.category-columns {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-auto-rows: minmax(260px, 1fr);
+    align-content: stretch;
+  }
+
+  .category-showcase {
+    min-height: 260px;
+  }
+
+  .category-columns .category-preview {
+    min-height: 170px;
+  }
+
   .category-item-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     grid-template-rows: 92px;
@@ -1033,6 +1115,11 @@ textarea {
     min-height: 25px;
     padding: 0 7px;
     font-size: .68rem;
+  }
+
+  .checkout-form > .primary-button {
+    min-height: 54px;
+    font-size: .9rem;
   }
 
   .order-panel {
@@ -1137,6 +1224,14 @@ textarea {
     flex: 1 1 auto;
   }
 
+  .menu-grid.category-columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(230px, 1fr));
+    grid-auto-rows: minmax(230px, 1fr);
+    gap: 8px;
+    overflow: auto;
+  }
+
   .menu-card {
     min-width: 0;
     min-height: 0;
@@ -1149,6 +1244,11 @@ textarea {
     aspect-ratio: auto;
     flex: 1 1 0;
     background: #08090d;
+  }
+
+  .category-columns .category-preview {
+    min-height: 150px;
+    flex: 1 1 76%;
   }
 
   .menu-grid.category-item-grid {
@@ -1232,6 +1332,12 @@ textarea {
   .primary-button {
     min-height: 23px;
     font-size: .65rem;
+  }
+
+  .checkout-form > .primary-button {
+    min-height: 62px;
+    font-size: .88rem;
+    line-height: 1.05;
   }
 
   .order-list {

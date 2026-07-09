@@ -3,7 +3,7 @@ const defaultMenuItems = [
   { id: "homemade-drinks", name: "Homemade Lemonade / Agua Fresca", category: "DRINKS", price: 4, desc: "Fresh handmade agua frescas and homemade lemonade.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AIIOTSGQNEBBLTYAJ5VU4KBL.jpeg?width=640&optimize=medium", toppingCategoryIds: ["agua-frescas"] },
   { id: "breakfast-taco", name: "Breakfast taco", category: "BREAKFAST", price: 4.5, desc: "Breakfast taco from the SoCal Tacos breakfast menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/UM5UDPOAYLWJQIVT7K6TO3MB.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "breakfast-burrito", name: "Breakfast burrito", category: "BREAKFAST", price: 8, desc: "Breakfast burrito from the SoCal Tacos breakfast menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "quesadilla", name: "Quesadilla", category: "LUNCH", price: 7, desc: "Plain or loaded quesadilla.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "Plain", price: 7 }, { name: "Loaded", price: 14 }] },
+  { id: "quesadilla", name: "Quesadilla", category: "LUNCH", price: 7, desc: "Plain or loaded quesadilla.", image: "", toppingCategoryIds: ["quesadilla-toppings"], variants: [{ name: "Plain", price: 7 }, { name: "Loaded", price: 14 }] },
   { id: "pork-taco", name: "Pork taco", category: "LUNCH", price: 13, desc: "Three tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/QS2LHOTOLEK64X5NHSKB3VCS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "chicken-taco", name: "Chicken taco", category: "LUNCH", price: 13, desc: "Three chicken tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LNXII34WYGXEFLEWWHRU4NBA.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "mix-three-tacos", name: "Mix 3 Tacos", category: "LUNCH", price: 13, desc: "Choose any three taco meats. The plate price matches the highest priced meat selected.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], tacoMix: true, tacoChoices: [{ name: "Pork", price: 13 }, { name: "Chicken", price: 13 }, { name: "Chorizo", price: 15 }, { name: "Al pastor", price: 15 }, { name: "Vegan chorizo", price: 15 }, { name: "Lengua", price: 16 }, { name: "Barbacoa beef cheeks", price: 16 }, { name: "Lamb birria", price: 18 }, { name: "Shrimp and steak", price: 18 }, { name: "Steak", price: 18 }] },
@@ -31,6 +31,7 @@ const defaultMenuItems = [
 
 const defaultToppingCategories = [
   { id: "taco-toppings", name: "Toppings", options: ["corn tortilla Shell", "flour tortilla Shell", "Romain Lettuce Leaf Shell", "cilantro", "melted chesse", "lime", "White Onions", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", "sour cream", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
+  { id: "quesadilla-toppings", name: "Quesadilla Toppings", options: ["cilantro", "melted chesse", "lime", "White Onions", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", "sour cream", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
   { id: "burger-toppings", name: "Burger Toppings", options: ["lettuce", "tomato", "White Onions", "grilled onions", "cheese", "sour cream", "Mild salsa", "Spicy Habanero", { name: "5oz Small Guacamole And Chips", price: 5 }] },
   { id: "bowl-toppings", name: "Bowl Toppings", options: ["rice", "beans", "cilantro", "White Onions", "lettuce", "cheese", "sour cream", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
   { id: "agua-frescas", name: "Agua Frescas", options: ["Watermelon", "Pineapple", "Mango", "Horchata", "Guava"] }
@@ -39,6 +40,7 @@ const defaultToppingCategories = [
 const menuStorageKey = "counterserveMenuItems";
 const toppingStorageKey = "counterserveToppingCategories";
 const categoryOrderStorageKey = "counterserveCategoryOrder";
+const orderHistoryStorageKey = "counterserveOrderHistory";
 const menuVersionKey = "counterserveMenuVersion";
 const currentMenuVersion = "socal-tacos-menu-2026-07-05";
 const taxRate = 0.0825;
@@ -46,7 +48,7 @@ let menuItems;
 let toppingCategories;
 let categoryOrder;
 let cart = [];
-let submittedOrders = [];
+let submittedOrders = loadOrderHistory();
 let lastOrder = null;
 let pendingToppingItemId = null;
 const categorySlideIndexes = {};
@@ -219,6 +221,32 @@ function loadCategoryOrder() {
     return Array.isArray(parsedOrder) ? parsedOrder : defaultOrder;
   } catch {
     return defaultOrder;
+  }
+}
+
+function loadOrderHistory() {
+  const savedOrders = localStorage.getItem(orderHistoryStorageKey);
+  if (!savedOrders) return [];
+
+  try {
+    const parsedOrders = JSON.parse(savedOrders);
+    if (!Array.isArray(parsedOrders)) return [];
+    return parsedOrders.map(order => ({
+      ...order,
+      createdAt: new Date(order.createdAt)
+    }));
+  } catch {
+    return [];
+  }
+}
+
+function saveOrderHistory() {
+  try {
+    localStorage.setItem(orderHistoryStorageKey, JSON.stringify(submittedOrders));
+    return true;
+  } catch {
+    alert("The order history could not be saved.");
+    return false;
   }
 }
 
@@ -493,9 +521,25 @@ function renderSubmittedOrders() {
 
   $("#submittedOrders").innerHTML = submittedOrders.map(order => `
     <article class="submitted-card">
-      <h3>#${order.id} - ${escapeHtml(order.customerName)}</h3>
-      <p>${escapeHtml(order.orderType)} - ${order.items.reduce((sum, item) => sum + item.qty, 0)} items - ${money(order.totals.total)}</p>
-      <p>${order.createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+      <div class="submitted-card-header">
+        <div>
+          <h3>#${order.id} - ${escapeHtml(order.customerName)}</h3>
+          <p>${escapeHtml(order.orderType)} - ${order.items.reduce((sum, item) => sum + item.qty, 0)} items</p>
+          <p>${order.createdAt.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</p>
+        </div>
+        <strong>${money(order.totals.total)}</strong>
+      </div>
+      <div class="history-items">
+        ${order.items.map(item => `
+          <div class="history-line">
+            <span>${item.qty}x ${escapeHtml(item.name)}</span>
+            <strong>${money(item.linePrice * item.qty)}</strong>
+            ${item.variantName ? `<small>${escapeHtml(item.variantName)}</small>` : ""}
+            ${toppingSummary(item.selectedToppings || []) ? `<small>${escapeHtml(toppingSummary(item.selectedToppings))}</small>` : ""}
+          </div>
+        `).join("")}
+      </div>
+      ${order.notes ? `<p class="history-notes"><strong>Notes:</strong> ${escapeHtml(order.notes)}</p>` : ""}
       <button class="ghost-button" data-print="${order.id}">Print Tickets</button>
     </article>
   `).join("");
@@ -548,6 +592,7 @@ function submitOrder(event) {
 
   const order = createOrder();
   submittedOrders.unshift(order);
+  saveOrderHistory();
   cart = [];
   $("#checkoutForm").reset();
   renderCart();
@@ -1050,11 +1095,16 @@ function selectedTacoMixVariant(item) {
 }
 
 function showPage(pageName) {
+  const isOrderPage = pageName === "order";
+  const isHistoryPage = pageName === "history";
   const isOwnerPage = pageName === "owner";
-  $("#orderPage").classList.toggle("hidden", isOwnerPage);
+  $("#orderPage").classList.toggle("hidden", !isOrderPage);
+  $("#historyPage").classList.toggle("hidden", !isHistoryPage);
   $("#ownerPage").classList.toggle("hidden", !isOwnerPage);
-  $("#orderViewBtn").classList.toggle("active", !isOwnerPage);
+  $("#orderViewBtn").classList.toggle("active", isOrderPage);
+  $("#historyViewBtn").classList.toggle("active", isHistoryPage);
   $("#ownerViewBtn").classList.toggle("active", isOwnerPage);
+  if (isHistoryPage) renderSubmittedOrders();
 }
 
 document.addEventListener("click", event => {
@@ -1115,6 +1165,7 @@ $("#clearCartBtn").addEventListener("click", () => {
 $("#demoOrderBtn").addEventListener("click", addDemoOrder);
 $("#resetMenuBtn").addEventListener("click", resetMenu);
 $("#orderViewBtn").addEventListener("click", () => showPage("order"));
+$("#historyViewBtn").addEventListener("click", () => showPage("history"));
 $("#ownerViewBtn").addEventListener("click", () => showPage("owner"));
 $("#ownerItemImageUrl").addEventListener("input", updateOwnerImagePreview);
 $("#ownerItemImageFile").addEventListener("change", updateOwnerImagePreview);

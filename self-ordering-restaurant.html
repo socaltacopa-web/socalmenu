@@ -24,6 +24,7 @@
     </div>
     <nav class="top-actions" aria-label="App views">
       <button class="nav-button active" id="orderViewBtn" type="button">Order Page</button>
+      <button class="nav-button" id="historyViewBtn" type="button">Order History</button>
       <button class="nav-button" id="ownerViewBtn" type="button">Owner Page</button>
       <button class="icon-button" id="printLastBtn" title="Print last ticket" aria-label="Print last ticket">Print</button>
     </nav>
@@ -81,17 +82,20 @@
       </aside>
     </main>
 
-    <section class="orders-band" aria-label="Submitted orders">
+  </div>
+
+  <main class="history-page hidden" id="historyPage">
+    <section class="history-panel" aria-label="Order history">
       <div class="section-heading compact">
         <div>
-        <p class="eyebrow">Kitchen queue</p>
-          <h2>Submitted Orders</h2>
+          <p class="eyebrow">Kitchen queue</p>
+          <h2>Order History</h2>
         </div>
         <button id="demoOrderBtn" class="ghost-button">Demo Order</button>
       </div>
       <div class="submitted-orders" id="submittedOrders"></div>
     </section>
-  </div>
+  </main>
 
   <main class="owner-page hidden" id="ownerPage">
     <section class="owner-form-panel" aria-label="Add menu item">
