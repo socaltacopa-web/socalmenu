@@ -254,6 +254,20 @@
     </form>
   </div>
 
+  <div class="modal hidden" id="orderSummaryModal" role="dialog" aria-modal="true" aria-labelledby="orderSummaryTitle">
+    <div class="modal-card order-summary-card">
+      <div class="section-heading compact">
+        <div>
+          <p class="eyebrow">Order sent</p>
+          <h2 id="orderSummaryTitle">Order Summary</h2>
+        </div>
+        <button class="ghost-button" type="button" id="closeOrderSummaryBtn">Close</button>
+      </div>
+      <div id="orderSummaryBody"></div>
+      <button class="primary-button" type="button" id="doneOrderSummaryBtn">Done</button>
+    </div>
+  </div>
+
   <div class="print-zone" id="printZone" aria-hidden="true"></div>
 
   <script src="self-ordering-restaurant.js"></script>

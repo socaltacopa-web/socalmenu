@@ -4,20 +4,20 @@ const defaultMenuItems = [
   { id: "breakfast-taco", name: "Breakfast taco", category: "BREAKFAST", price: 4.5, desc: "Breakfast taco from the SoCal Tacos breakfast menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/UM5UDPOAYLWJQIVT7K6TO3MB.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "breakfast-burrito", name: "Breakfast burrito", category: "BREAKFAST", price: 8, desc: "Breakfast burrito from the SoCal Tacos breakfast menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
   { id: "quesadilla", name: "Quesadilla", category: "LUNCH", price: 7, desc: "Plain or loaded quesadilla.", image: "", toppingCategoryIds: ["quesadilla-toppings"], variants: [{ name: "Plain", price: 7 }, { name: "Loaded", price: 14 }] },
-  { id: "pork-taco", name: "Pork taco", category: "LUNCH", price: 13, desc: "Three tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/QS2LHOTOLEK64X5NHSKB3VCS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "chicken-taco", name: "Chicken taco", category: "LUNCH", price: 13, desc: "Three chicken tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LNXII34WYGXEFLEWWHRU4NBA.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "pork-taco", name: "Pork taco", category: "LUNCH", price: 5, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/QS2LHOTOLEK64X5NHSKB3VCS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Pork Taco", price: 5 }, { name: "3 Pork Tacos", price: 13 }] },
+  { id: "chicken-taco", name: "Chicken taco", category: "LUNCH", price: 5, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LNXII34WYGXEFLEWWHRU4NBA.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Chicken Taco", price: 5 }, { name: "3 Chicken Tacos", price: 13 }] },
   { id: "mix-three-tacos", name: "Mix 3 Tacos", category: "LUNCH", price: 13, desc: "Choose any three taco meats. The plate price matches the highest priced meat selected.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], tacoMix: true, tacoChoices: [{ name: "Pork", price: 13 }, { name: "Chicken", price: 13 }, { name: "Chorizo", price: 15 }, { name: "Al pastor", price: 15 }, { name: "Vegan chorizo", price: 15 }, { name: "Lengua", price: 16 }, { name: "Barbacoa beef cheeks", price: 16 }, { name: "Lamb birria", price: 18 }, { name: "Shrimp and steak", price: 18 }, { name: "Steak", price: 18 }] },
-  { id: "chorizo-taco", name: "Chorizo taco", category: "LUNCH", price: 15, desc: "Three chorizo tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/RLK4VMZBHH3YPI73KFYLMKMM.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "al-pastor-tacos", name: "Al pastor tacos", category: "LUNCH", price: 15, desc: "Three al pastor tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ZQFFEBTTRQL6PERXUP7HGWC7.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "vegan-chorizo-tacos", name: "Vegan chorizo tacos", category: "LUNCH", price: 16, desc: "Three vegan chorizo tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L67FL2ATZQSUAGLNJNUABZC3.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "ground-beef-tacos", name: "Ground Beef tacos", category: "LUNCH", price: 15, desc: "Three ground beef tacos with your choice of SoCal toppings.", image: "", toppingCategoryIds: ["taco-toppings"] },
-  { id: "lengua-tacos", name: "(Lengua) beef Tongue tacos", category: "LUNCH", price: 16, desc: "Three lengua tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CK476NVFAZAHSSFDGS4T35S6.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], badge: "Sale" },
+  { id: "chorizo-taco", name: "Chorizo taco", category: "LUNCH", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/RLK4VMZBHH3YPI73KFYLMKMM.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Chorizo Taco", price: 6 }, { name: "3 Chorizo Tacos", price: 15 }] },
+  { id: "al-pastor-tacos", name: "Al pastor tacos", category: "LUNCH", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ZQFFEBTTRQL6PERXUP7HGWC7.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Al Pastor Taco", price: 6 }, { name: "3 Al Pastor Tacos", price: 15 }] },
+  { id: "vegan-chorizo-tacos", name: "Vegan chorizo tacos", category: "LUNCH", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L67FL2ATZQSUAGLNJNUABZC3.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Vegan Chorizo Taco", price: 6 }, { name: "3 Vegan Chorizo Tacos", price: 16 }] },
+  { id: "ground-beef-tacos", name: "Ground Beef tacos", category: "LUNCH", price: 6, desc: "Choose one taco or a three taco plate.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Ground Beef Taco", price: 6 }, { name: "3 Ground Beef Tacos", price: 15 }] },
+  { id: "lengua-tacos", name: "(Lengua) beef Tongue tacos", category: "LUNCH", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CK476NVFAZAHSSFDGS4T35S6.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Lengua Taco", price: 6 }, { name: "3 Lengua Tacos", price: 16 }], badge: "Sale" },
   { id: "la-dog", name: "La dog", category: "LUNCH", price: 6, desc: "SoCal-style LA dog.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" },
   { id: "cali-burger", name: "Cali Burger", category: "BURGERS", price: 13, desc: "Comes with animal fries or plain fries. Full size has 3 patties, avocado, lettuce, tomato, grilled onions, and cheese.", image: "", toppingCategoryIds: ["burger-toppings"], variants: [{ name: "JR Cali Burger", price: 13 }, { name: "Cali Burger", price: 16 }] },
   { id: "socal-bowl", name: "SoCal Bowl", category: "BOWLS", price: 13, desc: "Rice, beans, toppings, guac, and any meat. Add steak, lamb, or shrimp for $4.", image: "", toppingCategoryIds: ["bowl-toppings"], variants: [{ name: "Any meat", price: 13 }, { name: "Steak, lamb, or shrimp", price: 17 }] },
-  { id: "lamb-birria-taco", name: "Lamb birria Taco", category: "LUNCH", price: 18, desc: "Three lamb birria tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CXB3QK7QRCF6INZUPGE35VI5.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "shrimp-steak-tacos", name: "Shrimp and steak tacos", category: "LUNCH", price: 18, desc: "Three shrimp and steak tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/7MLVGRNLW6CBAWXV5BUWCNKS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
-  { id: "steak-tacos", name: "Steak tacos 3x", category: "LUNCH", price: 18, desc: "Three steak tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "lamb-birria-taco", name: "Lamb birria Taco", category: "LUNCH", price: 7, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CXB3QK7QRCF6INZUPGE35VI5.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Lamb Birria Taco", price: 7 }, { name: "3 Lamb Birria Tacos", price: 18 }] },
+  { id: "shrimp-steak-tacos", name: "Shrimp and steak tacos", category: "LUNCH", price: 7, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/7MLVGRNLW6CBAWXV5BUWCNKS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Shrimp and Steak Taco", price: 7 }, { name: "3 Shrimp and Steak Tacos", price: 18 }] },
+  { id: "steak-tacos", name: "Steak tacos", category: "LUNCH", price: 7, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Steak Taco", price: 7 }, { name: "3 Steak Tacos", price: 18 }] },
   { id: "small-tacos", name: "Small Tacos", category: "LUNCH", price: 10, desc: "Three small tacos. Choose chicken, pork, chorizo, ground beef, or steak.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "Chicken", price: 10 }, { name: "Pork", price: 10 }, { name: "Chorizo", price: 10 }, { name: "Ground Beef", price: 10 }, { name: "Steak", price: 12 }] },
   { id: "burritos", name: "Burritos", category: "BURRITOS", price: 11, desc: "Choose JR, small, or large burrito with your meat.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "JR Chicken/Pork", price: 11 }, { name: "JR Chorizo/Ground Beef/Al Pastor", price: 12 }, { name: "JR Barbacoa/Tongue", price: 13 }, { name: "JR Steak/Lamb/Steak and Shrimp", price: 15 }, { name: "Small Chicken/Pork", price: 12 }, { name: "Small Chorizo/Ground Beef/Al Pastor", price: 13 }, { name: "Small Barbacoa/Tongue", price: 14 }, { name: "Small Steak/Lamb/Steak and Shrimp", price: 16 }, { name: "Large Chicken/Pork", price: 16 }, { name: "Large Chorizo/Ground Beef/Al Pastor", price: 17 }, { name: "Large Barbacoa/Tongue", price: 19 }, { name: "Large Steak/Lamb/Steak and Shrimp", price: 20 }] },
   { id: "asada-fries", name: "Asada Fries", category: "FRIES", price: 13, desc: "Crispy fries topped with carne asada, cheese, pico, salsa, sour cream, and guac. Available with any meats.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "Regular", price: 13 }, { name: "Premium meat", price: 18 }] },
@@ -25,7 +25,7 @@ const defaultMenuItems = [
   { id: "street-corn", name: "Street corn", category: "SIDES", price: 6, desc: "Street corn from the SoCal Tacos menu.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/WM6WF22MK2VDFYBNB272YSD5.jpeg?width=640&optimize=medium" },
   { id: "rice-beans", name: "Rice & Beans", category: "SIDES", price: 5, desc: "Side of rice and beans.", image: "", toppingCategoryIds: ["bowl-toppings"] },
   { id: "plain-fries", name: "Plain Fries", category: "SIDES", price: 5, desc: "Plain crispy fries.", image: "", toppingCategoryIds: ["burger-toppings"] },
-  { id: "barbacoa-beef-cheeks", name: "barbacoa beef cheeks 3x", category: "LUNCH", price: 16, desc: "Three barbacoa beef cheek tacos with your choice of SoCal toppings.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LXS7VB2T5ZTBFACNLESBXGTI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"] },
+  { id: "barbacoa-beef-cheeks", name: "barbacoa beef cheeks", category: "LUNCH", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LXS7VB2T5ZTBFACNLESBXGTI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Barbacoa Beef Cheek Taco", price: 6 }, { name: "3 Barbacoa Beef Cheek Tacos", price: 16 }] },
   { id: "guacamole-chips", name: "Guacamole and chips", category: "SIDES", price: 5, desc: "Fresh, creamy guacamole made with real avocados, lime, and a pinch of spice.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ULDOA6QPOJG4TP2HLQAGL2LH.jpeg?width=640&optimize=medium", variants: [{ name: "5oz", price: 5 }, { name: "16oz", price: 7 }], badge: "Sale" }
 ];
 
@@ -51,6 +51,7 @@ let cart = [];
 let submittedOrders = loadOrderHistory();
 let lastOrder = null;
 let pendingToppingItemId = null;
+let orderSummaryTimer = null;
 const categorySlideIndexes = {};
 let activeCustomerCategory = null;
 
@@ -364,7 +365,7 @@ function renderMenu() {
 
 function menuItemCardMarkup(item, index) {
   return `
-    <article class="menu-card ${item.outOfStock ? "is-disabled" : ""}" style="animation-delay: ${index * 35}ms">
+    <article class="menu-card ${item.outOfStock ? "is-disabled" : ""}" ${item.outOfStock ? "" : `data-add-card="${item.id}" role="button" tabindex="0"`} style="animation-delay: ${index * 35}ms">
       ${imageMarkup(imageForItem(item), "menu-photo", "Photo")}
       <div class="menu-card-body">
         ${item.badge ? `<span class="menu-badge">${escapeHtml(item.badge)}</span>` : ""}
@@ -478,16 +479,17 @@ function addToCart(itemId) {
   addConfiguredItemToCart(item, []);
 }
 
-function addConfiguredItemToCart(item, selectedToppings, variant = null) {
+function addConfiguredItemToCart(item, selectedToppings, variant = null, qty = 1) {
   const variantName = variant?.name || "";
   const basePrice = variant?.price ?? item.price;
   const linePrice = basePrice + selectedToppingTotal(selectedToppings);
   const cartKey = cartKeyFor(item.id, selectedToppings, variantName);
+  const quantity = Math.max(1, Number(qty) || 1);
   const existing = cart.find(line => line.cartKey === cartKey);
   if (existing) {
-    existing.qty += 1;
+    existing.qty += quantity;
   } else {
-    cart.push({ ...item, cartKey, selectedToppings, variantName, linePrice, qty: 1 });
+    cart.push({ ...item, cartKey, selectedToppings, variantName, linePrice, qty: quantity });
   }
   renderCart();
 }
@@ -583,6 +585,60 @@ function printTickets(order) {
   window.print();
 }
 
+function orderSummaryMarkup(order) {
+  return `
+    <div class="summary-bear" aria-hidden="true">
+      <div class="bear-ear bear-ear-left"></div>
+      <div class="bear-ear bear-ear-right"></div>
+      <div class="bear-head">
+        <img src="socal-tacos-logo-cropped.png" alt="">
+      </div>
+      <div class="bear-body"></div>
+      <div class="bear-arm bear-arm-left"></div>
+      <div class="bear-arm bear-arm-right"></div>
+      <div class="bear-foot bear-foot-left"></div>
+      <div class="bear-foot bear-foot-right"></div>
+    </div>
+    <div class="summary-hero">
+      <p>Thank you, ${escapeHtml(order.customerName)}</p>
+      <strong>#${order.id}</strong>
+      <span>Your order was sent</span>
+    </div>
+    <div class="summary-list">
+      ${order.items.map(item => `
+        <div class="summary-line">
+          <span>${item.qty}x ${escapeHtml(item.name)}</span>
+          <strong>${money(item.linePrice * item.qty)}</strong>
+          ${item.variantName ? `<small>${escapeHtml(item.variantName)}</small>` : ""}
+          ${toppingSummary(item.selectedToppings || []) ? `<small>${escapeHtml(toppingSummary(item.selectedToppings))}</small>` : ""}
+        </div>
+      `).join("")}
+    </div>
+    ${order.notes ? `<p class="history-notes"><strong>Notes:</strong> ${escapeHtml(order.notes)}</p>` : ""}
+    <div class="summary-totals">
+      <div><span>Subtotal</span><strong>${money(order.totals.subtotal)}</strong></div>
+      <div><span>Tax</span><strong>${money(order.totals.tax)}</strong></div>
+      <div class="grand-total"><span>Total</span><strong>${money(order.totals.total)}</strong></div>
+    </div>
+  `;
+}
+
+function showOrderSummary(order) {
+  clearTimeout(orderSummaryTimer);
+  $("#orderSummaryBody").innerHTML = orderSummaryMarkup(order);
+  $("#orderSummaryModal").classList.remove("hidden");
+  orderSummaryTimer = setTimeout(() => {
+    closeOrderSummary();
+    printTickets(order);
+  }, 5000);
+}
+
+function closeOrderSummary() {
+  clearTimeout(orderSummaryTimer);
+  $("#orderSummaryModal").classList.add("hidden");
+  $("#orderSummaryBody").innerHTML = "";
+}
+
 function submitOrder(event) {
   event.preventDefault();
   if (cart.length === 0) {
@@ -597,7 +653,7 @@ function submitOrder(event) {
   $("#checkoutForm").reset();
   renderCart();
   renderSubmittedOrders();
-  printTickets(order);
+  showOrderSummary(order);
 }
 
 function addDemoOrder() {
@@ -1027,7 +1083,18 @@ function openToppingModal(item) {
     </section>
   ` : "";
 
-  $("#toppingModalBody").innerHTML = tacoMixMarkup + variantMarkup + itemToppingCategories(item).map(category => `
+  const quantityMarkup = `
+    <section class="topping-group quantity-group">
+      <h3>How many?</h3>
+      <div class="modal-qty-controls">
+        <button type="button" data-modal-qty="-1" aria-label="Less">-</button>
+        <input id="modalItemQty" type="number" min="1" max="99" step="1" value="1" inputmode="numeric" aria-label="Item quantity">
+        <button type="button" data-modal-qty="1" aria-label="More">+</button>
+      </div>
+    </section>
+  `;
+
+  $("#toppingModalBody").innerHTML = tacoMixMarkup + variantMarkup + quantityMarkup + itemToppingCategories(item).map(category => `
     <section class="topping-group">
       <h3>${escapeHtml(category.name)}</h3>
       <div class="choice-list">
@@ -1071,7 +1138,8 @@ function submitToppings(event) {
 
   const variantInput = document.querySelector(`#toppingModalBody input[name="itemVariant"]:checked`);
   const variant = tacoMixVariant || (variantInput ? { name: variantInput.value, price: Number(variantInput.dataset.price || item.price) } : null);
-  addConfiguredItemToCart(item, selectedToppings, variant);
+  const quantity = Math.max(1, Math.min(99, Number($("#modalItemQty")?.value || 1) || 1));
+  addConfiguredItemToCart(item, selectedToppings, variant, quantity);
   closeToppingModal();
 }
 
@@ -1109,6 +1177,7 @@ function showPage(pageName) {
 
 document.addEventListener("click", event => {
   const addId = event.target.dataset.add;
+  const addCardId = event.target.closest("[data-add-card]")?.dataset.addCard;
   const increaseId = event.target.dataset.increase;
   const decreaseId = event.target.dataset.decrease;
   const printId = event.target.dataset.print;
@@ -1117,11 +1186,13 @@ document.addEventListener("click", event => {
   const moveItemId = event.target.dataset.moveItem;
   const moveCategory = event.target.dataset.moveCategory;
   const moveDirection = event.target.dataset.moveDirection;
+  const modalQtyChange = event.target.dataset.modalQty;
   const removeToppingCategoryId = event.target.dataset.removeToppingCategory;
   const openCategory = event.target.closest("[data-open-category]")?.dataset.openCategory;
   const closeCategory = event.target.dataset.closeCategory;
 
   if (addId) addToCart(addId);
+  else if (addCardId) addToCart(addCardId);
   if (openCategory) {
     activeCustomerCategory = openCategory;
     renderMenu();
@@ -1134,6 +1205,13 @@ document.addEventListener("click", event => {
   if (decreaseId) changeQty(decreaseId, -1);
   if (moveItemId) moveOwnerItem(moveItemId, moveDirection);
   if (moveCategory) moveOwnerCategory(moveCategory, moveDirection);
+  if (modalQtyChange) {
+    const quantityInput = $("#modalItemQty");
+    if (quantityInput) {
+      const nextQuantity = Math.max(1, Math.min(99, Number(quantityInput.value || 1) + Number(modalQtyChange)));
+      quantityInput.value = nextQuantity;
+    }
+  }
   if (editItemId) openEditItem(editItemId);
   if (removeItemId) removeOwnerItem(removeItemId);
   if (removeToppingCategoryId) removeToppingCategory(removeToppingCategoryId);
@@ -1158,6 +1236,8 @@ $("#toppingCategoryForm").addEventListener("submit", addToppingCategory);
 $("#toppingForm").addEventListener("submit", submitToppings);
 $("#cancelToppingsBtn").addEventListener("click", closeToppingModal);
 $("#cancelEditItemBtn").addEventListener("click", closeEditItem);
+$("#closeOrderSummaryBtn").addEventListener("click", closeOrderSummary);
+$("#doneOrderSummaryBtn").addEventListener("click", closeOrderSummary);
 $("#clearCartBtn").addEventListener("click", () => {
   cart = [];
   renderCart();
