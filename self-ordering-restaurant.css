@@ -56,8 +56,8 @@ textarea {
 }
 
 .brand-logo {
-  width: clamp(112px, 18vw, 210px);
-  height: 88px;
+  width: clamp(160px, 22vw, 270px);
+  height: 96px;
   object-fit: contain;
   object-position: center;
   filter: drop-shadow(0 0 18px rgba(31, 200, 223, .28));
@@ -69,6 +69,31 @@ textarea {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 9px;
+}
+
+.language-switcher {
+  display: flex;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #050609;
+}
+
+.language-button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: white;
+  padding: 0 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.language-button.active {
+  background: var(--cyan);
+  color: #020406;
 }
 
 .topbar h1,
@@ -462,7 +487,7 @@ textarea {
 }
 
 .category-item-grid .menu-card[data-add-card]::after {
-  content: "Tap card to add";
+  content: attr(data-tap-label);
   display: block;
   margin: 0 6px 6px;
   border-radius: 6px;
@@ -532,12 +557,69 @@ textarea {
   padding-top: 14px;
 }
 
+.checkout-progress {
+  border: 1px solid rgba(38, 201, 224, .45);
+  border-radius: 999px;
+  background: rgba(38, 201, 224, .12);
+  color: var(--cyan);
+  padding: 8px 12px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.checkout-step {
+  display: grid;
+  gap: 12px;
+  min-height: 170px;
+}
+
+.checkout-step h3 {
+  margin: 0;
+  color: white;
+  font-size: 1.35rem;
+}
+
+.checkout-review {
+  margin: 0;
+  border-radius: 8px;
+  background: #090a0f;
+  color: white;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.checkout-nav {
+  display: grid;
+  grid-template-columns: .72fr 1fr;
+  gap: 10px;
+}
+
+.checkout-nav .primary-button,
+.checkout-nav .ghost-button {
+  min-height: 66px;
+  border-radius: 10px;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+#checkoutBackBtn.hidden + #checkoutNextBtn,
+#checkoutSubmitBtn:not(.hidden) {
+  grid-column: 1 / -1;
+}
+
 label {
   display: grid;
   gap: 6px;
   color: var(--muted);
   font-size: .9rem;
   font-weight: 700;
+}
+
+.optional-note {
+  color: var(--cyan);
+  font-size: .86em;
 }
 
 input,
@@ -888,20 +970,24 @@ textarea {
 
 .bear-head {
   z-index: 2;
-  top: 20px;
-  left: 31px;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
+  top: 16px;
+  left: 2px;
+  width: 146px;
+  height: 100px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .bear-head img {
-  width: 72px;
-  height: 52px;
+  width: 140px;
+  height: 96px;
   object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(38, 201, 224, .35));
   animation: logoBounce .55s ease-in-out infinite alternate;
 }
 
@@ -1254,8 +1340,8 @@ textarea {
   }
 
   .brand-logo {
-    width: clamp(74px, 9vw, 112px);
-    height: 44px;
+    width: clamp(112px, 14vw, 170px);
+    height: 50px;
   }
 
   .topbar h1 {
@@ -1418,6 +1504,16 @@ textarea {
     font-size: .74rem;
   }
 
+  .checkout-step {
+    min-height: 120px;
+  }
+
+  .checkout-nav .primary-button,
+  .checkout-nav .ghost-button {
+    min-height: 50px;
+    font-size: .9rem;
+  }
+
   input,
   select,
   textarea {
@@ -1458,8 +1554,8 @@ textarea {
   }
 
   .brand-logo {
-    width: 102px;
-    height: 42px;
+    width: 150px;
+    height: 48px;
   }
 
   .topbar h1 {
@@ -1654,23 +1750,47 @@ textarea {
     font-size: .95rem;
   }
 
+  .checkout-progress {
+    padding: 9px 12px;
+    font-size: .98rem;
+  }
+
+  .checkout-step {
+    min-height: 180px;
+    align-content: start;
+  }
+
+  .checkout-step h3 {
+    font-size: 1.25rem;
+  }
+
   .checkout-form label {
     gap: 6px;
     color: white;
-    font-size: .95rem;
+    font-size: 1.06rem;
   }
 
   .checkout-form input,
   .checkout-form select,
   .checkout-form textarea {
-    min-height: 50px;
+    min-height: 60px;
     padding: 10px 12px;
     border-width: 2px;
-    font-size: 1rem;
+    font-size: 1.12rem;
+  }
+
+  .checkout-nav {
+    gap: 9px;
+  }
+
+  .checkout-nav .primary-button,
+  .checkout-nav .ghost-button {
+    min-height: 78px;
+    font-size: 1.16rem;
   }
 
   textarea {
-    min-height: 58px;
+    min-height: 96px;
   }
 }
 

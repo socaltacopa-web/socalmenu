@@ -42,6 +42,7 @@ const toppingStorageKey = "counterserveToppingCategories";
 const categoryOrderStorageKey = "counterserveCategoryOrder";
 const orderHistoryStorageKey = "counterserveOrderHistory";
 const menuVersionKey = "counterserveMenuVersion";
+const languageStorageKey = "socalTacosLanguage";
 const currentMenuVersion = "socal-tacos-menu-2026-07-05";
 const taxRate = 0.0825;
 let menuItems;
@@ -52,8 +53,197 @@ let submittedOrders = loadOrderHistory();
 let lastOrder = null;
 let pendingToppingItemId = null;
 let orderSummaryTimer = null;
+let checkoutStep = 0;
 const categorySlideIndexes = {};
 let activeCustomerCategory = null;
+let currentLanguage = localStorage.getItem(languageStorageKey) || "en";
+
+const translations = {
+  en: {
+    selfOrdering: "Self ordering kiosk",
+    orderPage: "Order Page",
+    orderHistory: "Order History",
+    ownerPage: "Owner Page",
+    print: "Print",
+    freshFlavor: "Fresh coastal flavor",
+    tapItems: "Tap items to order",
+    socalTicket: "SoCal ticket",
+    currentOrder: "Current Order",
+    clear: "Clear",
+    reviewOrder: "Review your order",
+    emptyCart: "No items yet. Choose something delicious.",
+    customerName: "Customer name",
+    namePlaceholder: "Name for the order",
+    phoneNumber: "Phone number",
+    optional: "(optional)",
+    phonePlaceholder: "Phone number for pickup",
+    orderType: "Order type",
+    dineIn: "Dine in",
+    takeout: "Takeout",
+    delivery: "Delivery",
+    notes: "Notes",
+    notesPlaceholder: "Allergies, sauces, special prep",
+    readyToSend: "Ready to send?",
+    reviewTotal: "Review your total and place the order.",
+    subtotal: "Subtotal",
+    tax: "Tax",
+    total: "Total",
+    back: "Back",
+    next: "Next",
+    placeOrder: "Place Order & Print Tickets",
+    add: "Add",
+    out: "Out",
+    chooseSize: "Choose a size",
+    chooseMeats: "Choose 3 meats",
+    tapCard: "Tap card to add",
+    allCategories: "BACK TO CATEGORIES",
+    items: "items",
+    item: "item",
+    step: "Step",
+    of: "of",
+    customer: "Customer",
+    addBeforeNext: "Add at least one item before going next.",
+    enterName: "Enter the customer name first.",
+    orderSent: "Order sent",
+    orderSummary: "Order Summary",
+    close: "Close",
+    done: "Done",
+    thankYou: "Thank you",
+    sent: "Your order was sent",
+    howMany: "How many?",
+    selectOption: "Select an option",
+    chooseToppings: "Choose toppings for",
+    addToOrder: "Add To Order",
+    cancel: "Cancel",
+    each: "each",
+    noTicket: "No ticket has been printed yet."
+  },
+  es: {
+    selfOrdering: "Kiosco de pedido",
+    orderPage: "Ordenar",
+    orderHistory: "Historial",
+    ownerPage: "Dueño",
+    print: "Imprimir",
+    freshFlavor: "Sabor fresco",
+    tapItems: "Toque artículos para ordenar",
+    socalTicket: "Ticket SoCal",
+    currentOrder: "Orden actual",
+    clear: "Borrar",
+    reviewOrder: "Revise su orden",
+    emptyCart: "Todavía no hay artículos.",
+    customerName: "Nombre",
+    namePlaceholder: "Nombre para la orden",
+    phoneNumber: "Teléfono",
+    optional: "(opcional)",
+    phonePlaceholder: "Teléfono para recoger",
+    orderType: "Tipo de orden",
+    dineIn: "Comer aquí",
+    takeout: "Para llevar",
+    delivery: "Entrega",
+    notes: "Notas",
+    notesPlaceholder: "Alergias, salsas, preparación especial",
+    readyToSend: "¿Lista para enviar?",
+    reviewTotal: "Revise el total y mande la orden.",
+    subtotal: "Subtotal",
+    tax: "Impuesto",
+    total: "Total",
+    back: "Atrás",
+    next: "Siguiente",
+    placeOrder: "Mandar orden e imprimir",
+    add: "Agregar",
+    out: "Agotado",
+    chooseSize: "Elija una opción",
+    chooseMeats: "Elija 3 carnes",
+    tapCard: "Toque la tarjeta para agregar",
+    allCategories: "VOLVER A CATEGORÍAS",
+    items: "artículos",
+    item: "artículo",
+    step: "Paso",
+    of: "de",
+    customer: "Cliente",
+    addBeforeNext: "Agregue al menos un artículo antes de seguir.",
+    enterName: "Escriba el nombre primero.",
+    orderSent: "Orden enviada",
+    orderSummary: "Resumen de orden",
+    close: "Cerrar",
+    done: "Listo",
+    thankYou: "Gracias",
+    sent: "Su orden fue enviada",
+    howMany: "¿Cuántos?",
+    selectOption: "Seleccione una opción",
+    chooseToppings: "Elija ingredientes para",
+    addToOrder: "Agregar a la orden",
+    cancel: "Cancelar",
+    each: "cada uno",
+    noTicket: "Todavía no se ha impreso un ticket."
+  },
+  zh: {
+    selfOrdering: "自助点餐",
+    orderPage: "点餐",
+    orderHistory: "订单记录",
+    ownerPage: "店主管理",
+    print: "打印",
+    freshFlavor: "新鲜风味",
+    tapItems: "点击菜品点餐",
+    socalTicket: "SoCal 小票",
+    currentOrder: "当前订单",
+    clear: "清空",
+    reviewOrder: "确认订单",
+    emptyCart: "还没有菜品，请选择。",
+    customerName: "姓名",
+    namePlaceholder: "订单姓名",
+    phoneNumber: "电话号码",
+    optional: "（可选）",
+    phonePlaceholder: "取餐电话号码",
+    orderType: "订单类型",
+    dineIn: "堂食",
+    takeout: "外带",
+    delivery: "外送",
+    notes: "备注",
+    notesPlaceholder: "过敏、酱料、特别要求",
+    readyToSend: "准备提交？",
+    reviewTotal: "请确认总价并提交订单。",
+    subtotal: "小计",
+    tax: "税",
+    total: "总计",
+    back: "返回",
+    next: "下一步",
+    placeOrder: "提交订单并打印",
+    add: "添加",
+    out: "售完",
+    chooseSize: "选择选项",
+    chooseMeats: "选择3种肉",
+    tapCard: "点击卡片添加",
+    allCategories: "返回分类",
+    items: "项",
+    item: "项",
+    step: "步骤",
+    of: "/",
+    customer: "顾客",
+    addBeforeNext: "请先添加至少一项。",
+    enterName: "请先输入姓名。",
+    orderSent: "订单已发送",
+    orderSummary: "订单摘要",
+    close: "关闭",
+    done: "完成",
+    thankYou: "谢谢",
+    sent: "您的订单已发送",
+    howMany: "数量？",
+    selectOption: "选择选项",
+    chooseToppings: "选择配料：",
+    addToOrder: "加入订单",
+    cancel: "取消",
+    each: "每个",
+    noTicket: "还没有打印小票。"
+  }
+};
+
+const t = key => translations[currentLanguage]?.[key] || translations.en[key] || key;
+const orderTypeLabel = value => ({
+  "Dine in": t("dineIn"),
+  "Takeout": t("takeout"),
+  "Delivery": t("delivery")
+}[value] || value);
 
 const money = value => value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 const $ = selector => document.querySelector(selector);
@@ -338,7 +528,7 @@ function renderMenu() {
     menuGrid.classList.remove("category-columns");
     menuGrid.classList.add("stage-category", "category-item-grid");
     menuGrid.innerHTML = `
-      <button class="category-back" type="button" data-close-category="true">&lsaquo; BACK TO CATEGORIES</button>
+      <button class="category-back" type="button" data-close-category="true">&lsaquo; ${t("allCategories")}</button>
       <h3 class="category-view-title">${escapeHtml(activeCustomerCategory)}</h3>
       ${categoryItems.map((item, index) => menuItemCardMarkup(item, index)).join("")}
     `;
@@ -356,7 +546,7 @@ function renderMenu() {
       <button class="category-showcase" type="button" data-open-category="${escapeHtml(category)}" style="animation-delay: ${categoryIndex * 55}ms">
         <span class="category-preview"><img src="${escapeHtml(imageForItem(item))}" alt=""></span>
         <span class="category-showcase-name">${escapeHtml(category)}</span>
-        <span class="category-showcase-count">${items.length} item${items.length === 1 ? "" : "s"}</span>
+        <span class="category-showcase-count">${items.length} ${items.length === 1 ? t("item") : t("items")}</span>
         <span class="slide-dots" aria-hidden="true">${items.map((unused, index) => `<i class="${index === currentIndex ? "active" : ""}"></i>`).join("")}</span>
       </button>
     `;
@@ -365,19 +555,19 @@ function renderMenu() {
 
 function menuItemCardMarkup(item, index) {
   return `
-    <article class="menu-card ${item.outOfStock ? "is-disabled" : ""}" ${item.outOfStock ? "" : `data-add-card="${item.id}" role="button" tabindex="0"`} style="animation-delay: ${index * 35}ms">
+    <article class="menu-card ${item.outOfStock ? "is-disabled" : ""}" ${item.outOfStock ? "" : `data-add-card="${item.id}" data-tap-label="${escapeHtml(t("tapCard"))}" role="button" tabindex="0"`} style="animation-delay: ${index * 35}ms">
       ${imageMarkup(imageForItem(item), "menu-photo", "Photo")}
       <div class="menu-card-body">
         ${item.badge ? `<span class="menu-badge">${escapeHtml(item.badge)}</span>` : ""}
         <h3>${escapeHtml(item.name)}</h3>
         <p class="item-description">${escapeHtml(item.desc)}</p>
         ${item.outOfStock ? `<p class="stock-note">Out of stock</p>` : ""}
-        ${item.tacoMix ? `<p class="item-detail">Choose 3 meats</p>` : ""}
-        ${item.variants?.length ? `<p class="item-detail">Choose a size</p>` : ""}
+        ${item.tacoMix ? `<p class="item-detail">${t("chooseMeats")}</p>` : ""}
+        ${item.variants?.length ? `<p class="item-detail">${t("chooseSize")}</p>` : ""}
       </div>
       <div class="menu-card-footer">
         <span class="price">${priceText(item)}</span>
-        <button class="add-button" data-add="${item.id}" ${item.outOfStock ? "disabled" : ""}>${item.outOfStock ? "Out" : "Add"}</button>
+        <button class="add-button" data-add="${item.id}" ${item.outOfStock ? "disabled" : ""}>${item.outOfStock ? t("out") : t("add")}</button>
       </div>
     </article>
   `;
@@ -450,7 +640,7 @@ function renderCart() {
         <div>
           <div class="item-title">${escapeHtml(line.name)}</div>
           ${line.variantName ? `<div class="item-detail">${escapeHtml(line.variantName)}</div>` : ""}
-          <div class="item-detail">${money(line.linePrice)} each</div>
+          <div class="item-detail">${money(line.linePrice)} ${t("each")}</div>
           ${toppingSummary(line.selectedToppings || []) ? `<div class="item-detail">${escapeHtml(toppingSummary(line.selectedToppings))}</div>` : ""}
         </div>
         <div class="qty-controls">
@@ -466,6 +656,49 @@ function renderCart() {
   $("#subtotal").textContent = money(totals.subtotal);
   $("#tax").textContent = money(totals.tax);
   $("#total").textContent = money(totals.total);
+  renderCheckoutStep();
+}
+
+function checkoutReviewText() {
+  const itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
+  const name = $("#customerName").value.trim() || t("customer");
+  const phone = $("#customerPhone").value.trim();
+  return `${name}${phone ? ` - ${phone}` : ""} - ${orderTypeLabel($("#orderType").value)} - ${itemCount} ${itemCount === 1 ? t("item") : t("items")}`;
+}
+
+function renderCheckoutStep() {
+  const steps = [...document.querySelectorAll("[data-checkout-step]")];
+  if (!steps.length) return;
+  checkoutStep = Math.max(0, Math.min(checkoutStep, steps.length - 1));
+  steps.forEach(step => {
+    step.classList.toggle("hidden", Number(step.dataset.checkoutStep) !== checkoutStep);
+  });
+  $("#checkoutProgress").textContent = `${t("step")} ${checkoutStep + 1} ${t("of")} ${steps.length}`;
+  $("#checkoutBackBtn").classList.toggle("hidden", checkoutStep === 0);
+  $("#checkoutNextBtn").classList.toggle("hidden", checkoutStep === steps.length - 1);
+  $("#checkoutSubmitBtn").classList.toggle("hidden", checkoutStep !== steps.length - 1);
+  if ($("#checkoutReviewText")) $("#checkoutReviewText").textContent = checkoutReviewText();
+}
+
+function nextCheckoutStep() {
+  const steps = [...document.querySelectorAll("[data-checkout-step]")];
+  if (!steps.length) return;
+  if (checkoutStep === 0 && cart.length === 0) {
+    alert(t("addBeforeNext"));
+    return;
+  }
+  if (checkoutStep === 1 && !$("#customerName").value.trim()) {
+    $("#customerName").focus();
+    alert(t("enterName"));
+    return;
+  }
+  checkoutStep = Math.min(checkoutStep + 1, steps.length - 1);
+  renderCheckoutStep();
+}
+
+function previousCheckoutStep() {
+  checkoutStep = Math.max(checkoutStep - 1, 0);
+  renderCheckoutStep();
 }
 
 function addToCart(itemId) {
@@ -507,6 +740,7 @@ function createOrder() {
   return {
     id: String(Date.now()).slice(-6),
     customerName: $("#customerName").value.trim(),
+    customerPhone: $("#customerPhone").value.trim(),
     orderType: $("#orderType").value,
     notes: $("#orderNotes").value.trim(),
     items: cart.map(item => ({ ...item })),
@@ -526,7 +760,8 @@ function renderSubmittedOrders() {
       <div class="submitted-card-header">
         <div>
           <h3>#${order.id} - ${escapeHtml(order.customerName)}</h3>
-          <p>${escapeHtml(order.orderType)} - ${order.items.reduce((sum, item) => sum + item.qty, 0)} items</p>
+          <p>${escapeHtml(orderTypeLabel(order.orderType))} - ${order.items.reduce((sum, item) => sum + item.qty, 0)} ${t("items")}</p>
+          ${order.customerPhone ? `<p>${escapeHtml(order.customerPhone)}</p>` : ""}
           <p>${order.createdAt.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</p>
         </div>
         <strong>${money(order.totals.total)}</strong>
@@ -547,6 +782,58 @@ function renderSubmittedOrders() {
   `).join("");
 }
 
+function applyLanguage() {
+  document.documentElement.lang = currentLanguage;
+  document.querySelectorAll("[data-language]").forEach(button => {
+    button.classList.toggle("active", button.dataset.language === currentLanguage);
+  });
+  $(".brand-lockup .eyebrow").textContent = t("selfOrdering");
+  $("#orderViewBtn").textContent = t("orderPage");
+  $("#historyViewBtn").textContent = t("orderHistory");
+  $("#ownerViewBtn").textContent = t("ownerPage");
+  $("#printLastBtn").textContent = t("print");
+  $(".menu-area .section-heading .eyebrow").textContent = t("freshFlavor");
+  $(".menu-area .section-heading h2").textContent = t("tapItems");
+  $(".order-panel .panel-header .eyebrow").textContent = t("socalTicket");
+  $(".order-panel .panel-header h2").textContent = t("currentOrder");
+  $("#clearCartBtn").textContent = t("clear");
+  document.querySelector('[data-checkout-step="0"] h3').textContent = t("reviewOrder");
+  document.querySelector('[data-checkout-step="1"] label').childNodes[0].textContent = `${t("customerName")} `;
+  $("#customerName").placeholder = t("namePlaceholder");
+  document.querySelector('[data-checkout-step="2"] label').childNodes[0].textContent = `${t("phoneNumber")} `;
+  $(".optional-note").textContent = t("optional");
+  $("#customerPhone").placeholder = t("phonePlaceholder");
+  document.querySelector('[data-checkout-step="3"] label').childNodes[0].textContent = `${t("orderType")} `;
+  document.querySelector('#orderType option[value="Dine in"]').textContent = t("dineIn");
+  document.querySelector('#orderType option[value="Takeout"]').textContent = t("takeout");
+  document.querySelector('#orderType option[value="Delivery"]').textContent = t("delivery");
+  document.querySelector('[data-checkout-step="4"] label').childNodes[0].textContent = `${t("notes")} `;
+  $("#orderNotes").placeholder = t("notesPlaceholder");
+  document.querySelector('[data-checkout-step="5"] h3').textContent = t("readyToSend");
+  $("#checkoutReviewText").textContent = t("reviewTotal");
+  $(".totals div:nth-child(1) span").textContent = t("subtotal");
+  $(".totals div:nth-child(2) span").textContent = t("tax");
+  $(".totals .grand-total span").textContent = t("total");
+  $("#checkoutBackBtn").textContent = t("back");
+  $("#checkoutNextBtn").textContent = t("next");
+  $("#checkoutSubmitBtn").textContent = t("placeOrder");
+  $("#orderSummaryTitle").textContent = t("orderSummary");
+  $("#closeOrderSummaryBtn").textContent = t("close");
+  $("#doneOrderSummaryBtn").textContent = t("done");
+  $("#toppingForm .primary-button").textContent = t("addToOrder");
+  $("#cancelToppingsBtn").textContent = t("cancel");
+  renderMenu();
+  renderCart();
+  renderSubmittedOrders();
+  renderCheckoutStep();
+}
+
+function setLanguage(language) {
+  currentLanguage = translations[language] ? language : "en";
+  localStorage.setItem(languageStorageKey, currentLanguage);
+  applyLanguage();
+}
+
 function ticketMarkup(order, type) {
   const isKitchen = type === "Kitchen";
   return `
@@ -555,7 +842,8 @@ function ticketMarkup(order, type) {
       <p>SoCal Tacos</p>
       <div class="dash"></div>
       <p>Order #${order.id}</p>
-      <p>${escapeHtml(order.customerName)} - ${escapeHtml(order.orderType)}</p>
+      <p>${escapeHtml(order.customerName)} - ${escapeHtml(orderTypeLabel(order.orderType))}</p>
+      ${order.customerPhone ? `<p>${escapeHtml(order.customerPhone)}</p>` : ""}
       <p>${order.createdAt.toLocaleString()}</p>
       <div class="dash"></div>
       ${order.items.map(item => `
@@ -591,7 +879,7 @@ function orderSummaryMarkup(order) {
       <div class="bear-ear bear-ear-left"></div>
       <div class="bear-ear bear-ear-right"></div>
       <div class="bear-head">
-        <img src="socal-tacos-logo-cropped.png" alt="">
+        <img src="socal-tacos-bear-logo.png" alt="">
       </div>
       <div class="bear-body"></div>
       <div class="bear-arm bear-arm-left"></div>
@@ -600,9 +888,10 @@ function orderSummaryMarkup(order) {
       <div class="bear-foot bear-foot-right"></div>
     </div>
     <div class="summary-hero">
-      <p>Thank you, ${escapeHtml(order.customerName)}</p>
+      <p>${t("thankYou")}, ${escapeHtml(order.customerName)}</p>
       <strong>#${order.id}</strong>
-      <span>Your order was sent</span>
+      <span>${t("sent")}</span>
+      ${order.customerPhone ? `<span>${escapeHtml(order.customerPhone)}</span>` : ""}
     </div>
     <div class="summary-list">
       ${order.items.map(item => `
@@ -651,6 +940,7 @@ function submitOrder(event) {
   saveOrderHistory();
   cart = [];
   $("#checkoutForm").reset();
+  checkoutStep = 0;
   renderCart();
   renderSubmittedOrders();
   showOrderSummary(order);
@@ -1048,10 +1338,10 @@ function resetMenu() {
 
 function openToppingModal(item) {
   pendingToppingItemId = item.id;
-  $("#toppingModalTitle").textContent = `Choose toppings for ${item.name}`;
+  $("#toppingModalTitle").textContent = `${t("chooseToppings")} ${item.name}`;
   const tacoMixMarkup = item.tacoMix ? `
     <section class="topping-group">
-      <h3>Choose 3 taco meats</h3>
+      <h3>${t("chooseMeats")}</h3>
       <div class="choice-list taco-mix-list">
         ${[1, 2, 3].map(number => `
           <label class="taco-mix-choice">
@@ -1066,12 +1356,12 @@ function openToppingModal(item) {
           </label>
         `).join("")}
       </div>
-      <p class="choice-help">The plate price becomes the highest priced meat selected.</p>
+      <p class="choice-help">${currentLanguage === "es" ? "El precio será el de la carne más cara." : currentLanguage === "zh" ? "价格按最高价肉类计算。" : "The plate price becomes the highest priced meat selected."}</p>
     </section>
   ` : "";
   const variantMarkup = item.variants?.length ? `
     <section class="topping-group">
-      <h3>Select an option</h3>
+      <h3>${t("selectOption")}</h3>
       <div class="choice-list">
         ${item.variants.map((variant, index) => `
           <label class="topping-option">
@@ -1085,7 +1375,7 @@ function openToppingModal(item) {
 
   const quantityMarkup = `
     <section class="topping-group quantity-group">
-      <h3>How many?</h3>
+      <h3>${t("howMany")}</h3>
       <div class="modal-qty-controls">
         <button type="button" data-modal-qty="-1" aria-label="Less">-</button>
         <input id="modalItemQty" type="number" min="1" max="99" step="1" value="1" inputmode="numeric" aria-label="Item quantity">
@@ -1132,7 +1422,7 @@ function submitToppings(event) {
   }));
   const tacoMixVariant = item.tacoMix ? selectedTacoMixVariant(item) : null;
   if (item.tacoMix && !tacoMixVariant) {
-    alert("Choose all 3 taco meats first.");
+    alert(currentLanguage === "es" ? "Elija las 3 carnes primero." : currentLanguage === "zh" ? "请先选择3种肉。" : "Choose all 3 taco meats first.");
     return;
   }
 
@@ -1221,6 +1511,10 @@ document.addEventListener("click", event => {
   }
 });
 
+document.querySelectorAll("[data-language]").forEach(button => {
+  button.addEventListener("click", () => setLanguage(button.dataset.language));
+});
+
 document.addEventListener("change", event => {
   const itemId = event.target.dataset.itemToppingItem;
   const categoryId = event.target.dataset.itemToppingCategory;
@@ -1238,8 +1532,11 @@ $("#cancelToppingsBtn").addEventListener("click", closeToppingModal);
 $("#cancelEditItemBtn").addEventListener("click", closeEditItem);
 $("#closeOrderSummaryBtn").addEventListener("click", closeOrderSummary);
 $("#doneOrderSummaryBtn").addEventListener("click", closeOrderSummary);
+$("#checkoutNextBtn").addEventListener("click", nextCheckoutStep);
+$("#checkoutBackBtn").addEventListener("click", previousCheckoutStep);
 $("#clearCartBtn").addEventListener("click", () => {
   cart = [];
+  checkoutStep = 0;
   renderCart();
 });
 $("#demoOrderBtn").addEventListener("click", addDemoOrder);
@@ -1255,13 +1552,15 @@ $("#printLastBtn").addEventListener("click", () => {
   if (lastOrder) {
     printTickets(lastOrder);
   } else {
-    alert("No ticket has been printed yet.");
+    alert(t("noTicket"));
   }
 });
 
 refreshMenuViews();
 renderCart();
 renderSubmittedOrders();
+renderCheckoutStep();
+applyLanguage();
 
 setInterval(() => {
   if ($("#orderPage").classList.contains("hidden") || activeCustomerCategory) return;

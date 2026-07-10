@@ -1,4 +1,4 @@
-const CACHE_NAME = "socal-tacos-kiosk-v21";
+const CACHE_NAME = "socal-tacos-kiosk-v25";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const APP_FILES = [
   "./self-ordering-restaurant.js",
   "./socal-tacos-logo-cropped.png",
   "./socal-tacos-logo.png",
+  "./socal-tacos-bear-logo.png",
   "./manifest.webmanifest"
 ];
 
