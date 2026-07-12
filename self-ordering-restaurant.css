@@ -277,6 +277,7 @@ textarea {
 }
 
 .category-preview {
+  position: relative;
   width: 100%;
   min-height: 0;
   flex: 1 1 74%;
@@ -285,11 +286,19 @@ textarea {
 }
 
 .category-preview img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;
+  opacity: 0;
+  transition: opacity 1.15s ease;
+}
+
+.category-preview img.active {
+  opacity: 1;
 }
 
 .category-showcase-name {
@@ -1296,35 +1305,6 @@ textarea {
   width: 100%;
 }
 
-.ticket {
-  width: 320px;
-  padding: 16px;
-  color: black;
-  background: white;
-  font-family: "Courier New", monospace;
-}
-
-.ticket h2,
-.ticket h3,
-.ticket p {
-  margin: 0;
-}
-
-.ticket .dash {
-  border-top: 1px dashed #111;
-  margin: 10px 0;
-}
-
-.ticket-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.print-zone {
-  display: none;
-}
-
 @media (min-width: 901px) {
   body:has(#orderPage:not(.hidden)) {
     overflow: hidden;
@@ -1843,19 +1823,5 @@ textarea {
 
   .taco-mix-list {
     grid-template-columns: 1fr;
-  }
-}
-
-@media print {
-  body > :not(.print-zone) {
-    display: none !important;
-  }
-
-  .print-zone {
-    display: block;
-  }
-
-  .ticket {
-    break-after: page;
   }
 }
