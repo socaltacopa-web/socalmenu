@@ -43,6 +43,8 @@ const menuStorageKey = "counterserveMenuItems";
 const toppingStorageKey = "counterserveToppingCategories";
 const categoryOrderStorageKey = "counterserveCategoryOrder";
 const orderHistoryStorageKey = "counterserveOrderHistory";
+const pendingOrderDeliveryStorageKey = "socalTacosPendingOrderDelivery";
+const sharedOrdersUrlStorageKey = "socalTacosSharedOrdersUrl";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
@@ -62,6 +64,8 @@ let inactivityTimer = null;
 const categorySlideIndexes = {};
 let activeCustomerCategory = null;
 let currentLanguage = localStorage.getItem(languageStorageKey) || "en";
+let sharedOrdersUrl = localStorage.getItem(sharedOrdersUrlStorageKey) || "";
+let isRetryingOrderDelivery = false;
 
 const translations = {
   en: {
@@ -467,13 +471,41 @@ function loadOrderHistory() {
   try {
     const parsedOrders = JSON.parse(savedOrders);
     if (!Array.isArray(parsedOrders)) return [];
-    return parsedOrders.map(order => ({
-      ...order,
-      createdAt: new Date(order.createdAt)
-    }));
+    return parsedOrders.map(normalizeOrder).filter(Boolean);
   } catch {
     return [];
   }
+}
+
+function normalizeOrder(order) {
+  if (!order || !order.id) return null;
+  return {
+    ...order,
+    createdAt: new Date(order.createdAt || Date.now()),
+    items: Array.isArray(order.items) ? order.items : [],
+    totals: order.totals || { subtotal: 0, tax: 0, total: 0 }
+  };
+}
+
+function serializableOrder(order) {
+  return {
+    ...order,
+    createdAt: order.createdAt instanceof Date ? order.createdAt.toISOString() : new Date(order.createdAt || Date.now()).toISOString()
+  };
+}
+
+function mergeOrderHistory(orders) {
+  const nextOrders = [...submittedOrders];
+  orders.map(normalizeOrder).filter(Boolean).forEach(order => {
+    const existingIndex = nextOrders.findIndex(existing => existing.id === order.id);
+    if (existingIndex === -1) nextOrders.push(order);
+    else nextOrders[existingIndex] = { ...nextOrders[existingIndex], ...order };
+  });
+  submittedOrders = nextOrders
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 250);
+  saveOrderHistory();
+  renderSubmittedOrders();
 }
 
 function saveOrderHistory() {
@@ -484,6 +516,31 @@ function saveOrderHistory() {
     alert("The order history could not be saved.");
     return false;
   }
+}
+
+function loadPendingOrderDeliveries() {
+  try {
+    const pending = JSON.parse(localStorage.getItem(pendingOrderDeliveryStorageKey) || "[]");
+    return Array.isArray(pending) ? pending.map(normalizeOrder).filter(Boolean) : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePendingOrderDeliveries(orders) {
+  localStorage.setItem(pendingOrderDeliveryStorageKey, JSON.stringify(orders.map(serializableOrder)));
+}
+
+function queueOrderDelivery(order) {
+  const pending = loadPendingOrderDeliveries();
+  if (!pending.some(pendingOrder => pendingOrder.id === order.id)) pending.unshift(order);
+  savePendingOrderDeliveries(pending.slice(0, 100));
+  updateSharedOrdersStatus();
+}
+
+function removePendingOrderDelivery(orderId) {
+  savePendingOrderDeliveries(loadPendingOrderDeliveries().filter(order => order.id !== orderId));
+  updateSharedOrdersStatus();
 }
 
 function saveMenuItems() {
@@ -1016,7 +1073,72 @@ function bilingualOrderEmailText(order) {
   ].join("\n");
 }
 
-async function sendOrderEmail(order, showAlert = false) {
+function sharedOrdersEndpoint(action = "") {
+  if (!sharedOrdersUrl) return "";
+  try {
+    const url = new URL(sharedOrdersUrl);
+    if (action) url.searchParams.set("action", action);
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
+function updateSharedOrdersStatus(message = "") {
+  const status = $("#sharedOrdersStatus");
+  if (!status) return;
+  const pendingCount = loadPendingOrderDeliveries().length;
+  if (message) {
+    status.textContent = message;
+  } else if (sharedOrdersUrl && pendingCount) {
+    status.textContent = `Shared history connected. ${pendingCount} order${pendingCount === 1 ? "" : "s"} waiting to send.`;
+  } else if (sharedOrdersUrl) {
+    status.textContent = "Shared history connected. Orders will sync on this device.";
+  } else if (pendingCount) {
+    status.textContent = `${pendingCount} order${pendingCount === 1 ? "" : "s"} waiting to email when the internet works.`;
+  } else {
+    status.textContent = "Shared history is not connected yet.";
+  }
+}
+
+async function sendOrderToSharedHistory(order) {
+  const endpoint = sharedOrdersEndpoint("order");
+  if (!endpoint) return false;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ order: serializableOrder(order) })
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function pullSharedOrderHistory() {
+  const endpoint = sharedOrdersEndpoint("orders");
+  if (!endpoint) {
+    updateSharedOrdersStatus();
+    return false;
+  }
+
+  try {
+    const response = await fetch(endpoint, { cache: "no-store" });
+    if (!response.ok) throw new Error("Shared history was not available.");
+    const data = await response.json();
+    const orders = Array.isArray(data) ? data : data.orders;
+    if (Array.isArray(orders)) mergeOrderHistory(orders);
+    updateSharedOrdersStatus("Shared history updated.");
+    return true;
+  } catch {
+    updateSharedOrdersStatus("Shared history could not update. This device will keep its local orders.");
+    return false;
+  }
+}
+
+async function sendOrderEmailNow(order, showAlert = false) {
   const payload = {
     _subject: `SoCal Tacos Order #${order.id}`,
     _template: "box",
@@ -1047,6 +1169,58 @@ async function sendOrderEmail(order, showAlert = false) {
     if (showAlert) alert("The email did not send. Check the internet connection and try again.");
     return false;
   }
+}
+
+async function deliverOrder(order, showAlert = false) {
+  if (sharedOrdersUrl) {
+    const sharedSent = await sendOrderToSharedHistory(order);
+    if (sharedSent) {
+      removePendingOrderDelivery(order.id);
+      if (showAlert) alert("Order sent to shared history.");
+      return true;
+    }
+
+    queueOrderDelivery(order);
+    return false;
+  }
+
+  const emailSent = await sendOrderEmailNow(order, showAlert);
+  if (emailSent) {
+    removePendingOrderDelivery(order.id);
+    return true;
+  }
+
+  queueOrderDelivery(order);
+  return false;
+}
+
+async function retryPendingOrderDeliveries() {
+  if (isRetryingOrderDelivery) return;
+  const pending = loadPendingOrderDeliveries();
+  if (!pending.length) {
+    updateSharedOrdersStatus();
+    return;
+  }
+
+  isRetryingOrderDelivery = true;
+  try {
+    for (const order of pending) {
+      await deliverOrder(order);
+    }
+  } finally {
+    isRetryingOrderDelivery = false;
+    updateSharedOrdersStatus();
+  }
+}
+
+function saveSharedOrdersUrl(event) {
+  event.preventDefault();
+  sharedOrdersUrl = ($("#sharedOrdersUrl")?.value || "").trim();
+  if (sharedOrdersUrl) localStorage.setItem(sharedOrdersUrlStorageKey, sharedOrdersUrl);
+  else localStorage.removeItem(sharedOrdersUrlStorageKey);
+  updateSharedOrdersStatus(sharedOrdersUrl ? "Shared history link saved." : "Shared history link removed.");
+  retryPendingOrderDeliveries();
+  pullSharedOrderHistory();
 }
 
 function orderSummaryMarkup(order) {
@@ -1120,7 +1294,7 @@ function submitOrder(event) {
   renderCart();
   renderSubmittedOrders();
   showOrderSummary(order);
-  sendOrderEmail(order);
+  deliverOrder(order);
 }
 
 function addDemoOrder() {
@@ -1643,7 +1817,10 @@ function showPage(pageName) {
   toggleClass("#historyViewBtn", "active", isHistoryPage);
   toggleClass("#ownerViewBtn", "active", isOwnerPage);
   if (isSimpleMenuPage) renderSimpleMenu();
-  if (isHistoryPage) renderSubmittedOrders();
+  if (isHistoryPage) {
+    renderSubmittedOrders();
+    pullSharedOrderHistory();
+  }
 }
 
 function returnToHomeAfterInactivity() {
@@ -1748,12 +1925,18 @@ on("#ownerItemImageUrl", "input", updateOwnerImagePreview);
 on("#ownerItemImageFile", "change", updateOwnerImagePreview);
 on("#editItemImageUrl", "input", updateEditImagePreview);
 on("#editItemImageFile", "change", updateEditImagePreview);
+on("#sharedOrdersForm", "submit", saveSharedOrdersUrl);
+if ($("#sharedOrdersUrl")) $("#sharedOrdersUrl").value = sharedOrdersUrl;
 refreshMenuViews();
 renderCart();
 renderSubmittedOrders();
 renderCheckoutStep();
 applyLanguage();
+updateSharedOrdersStatus();
+retryPendingOrderDeliveries();
+pullSharedOrderHistory();
 resetInactivityTimer();
+window.addEventListener("online", retryPendingOrderDeliveries);
 
 setInterval(() => {
   if ($("#orderPage").classList.contains("hidden") || activeCustomerCategory) return;
@@ -1765,6 +1948,9 @@ setInterval(() => {
   });
   updateCategorySlides();
 }, 8000);
+
+setInterval(retryPendingOrderDeliveries, 30000);
+setInterval(pullSharedOrderHistory, 60000);
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
   navigator.serviceWorker.register("./service-worker.js").catch(() => {});

@@ -189,6 +189,24 @@
       </form>
     </section>
 
+    <section class="owner-list-panel shared-orders-panel" aria-label="Shared order history">
+      <div class="section-heading compact">
+        <div>
+          <p class="eyebrow">All devices</p>
+          <h2>Shared Order History</h2>
+        </div>
+      </div>
+      <p class="owner-help">Paste the shared order link here so this iPad and other devices can see the same order history.</p>
+      <form class="owner-form" id="sharedOrdersForm">
+        <label class="wide-field">
+          Shared order link
+          <input id="sharedOrdersUrl" type="url" placeholder="Google Apps Script web app URL">
+        </label>
+        <button class="primary-button" type="submit">Save Shared History Link</button>
+      </form>
+      <p class="sync-status" id="sharedOrdersStatus">Shared history is not connected yet.</p>
+    </section>
+
     <div class="owner-stack">
       <section class="owner-list-panel" aria-label="Menu categories">
         <div class="section-heading compact">
