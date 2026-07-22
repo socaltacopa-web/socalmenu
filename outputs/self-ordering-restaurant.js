@@ -43,8 +43,10 @@ const menuStorageKey = "counterserveMenuItems";
 const toppingStorageKey = "counterserveToppingCategories";
 const categoryOrderStorageKey = "counterserveCategoryOrder";
 const orderHistoryStorageKey = "counterserveOrderHistory";
+const cartStorageKey = "socalTacosActiveCart";
 const pendingOrderDeliveryStorageKey = "socalTacosPendingOrderDelivery";
 const sharedOrdersUrlStorageKey = "socalTacosSharedOrdersUrl";
+const sharedMenuUpdatedAtStorageKey = "socalTacosSharedMenuUpdatedAt";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
@@ -54,7 +56,7 @@ const taxRate = 0.0825;
 let menuItems;
 let toppingCategories;
 let categoryOrder;
-let cart = [];
+let cart = loadSavedCart();
 let submittedOrders = loadOrderHistory();
 let lastOrder = null;
 let pendingToppingItemId = null;
@@ -66,6 +68,8 @@ let activeCustomerCategory = null;
 let currentLanguage = localStorage.getItem(languageStorageKey) || "en";
 let sharedOrdersUrl = localStorage.getItem(sharedOrdersUrlStorageKey) || "";
 let isRetryingOrderDelivery = false;
+let isApplyingSharedMenu = false;
+let sharedMenuPushTimer = null;
 
 const translations = {
   en: {
@@ -517,6 +521,38 @@ function saveOrderHistory() {
   }
 }
 
+function loadSavedCart() {
+  try {
+    const savedCart = JSON.parse(localStorage.getItem(cartStorageKey) || "[]");
+    if (!Array.isArray(savedCart)) return [];
+    return savedCart
+      .filter(item => item && item.id && Number(item.qty) > 0)
+      .map(item => ({
+        ...item,
+        selectedToppings: Array.isArray(item.selectedToppings) ? item.selectedToppings : [],
+        variantName: item.variantName || "",
+        linePrice: Number(item.linePrice || item.price || 0),
+        qty: Math.max(1, Number(item.qty) || 1),
+        cartKey: item.cartKey || cartKeyFor(item.id, item.selectedToppings || [], item.variantName || "")
+      }));
+  } catch {
+    return [];
+  }
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem(cartStorageKey, JSON.stringify(cart));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function clearSavedCart() {
+  localStorage.removeItem(cartStorageKey);
+}
+
 function loadPendingOrderDeliveries() {
   try {
     const pending = JSON.parse(localStorage.getItem(pendingOrderDeliveryStorageKey) || "[]");
@@ -546,6 +582,7 @@ function saveMenuItems() {
   try {
     localStorage.setItem(menuStorageKey, JSON.stringify(menuItems));
     localStorage.setItem(menuVersionKey, currentMenuVersion);
+    touchSharedMenu();
     return true;
   } catch {
     alert("The menu could not be saved. Try a smaller picture or use a picture link.");
@@ -557,6 +594,7 @@ function saveToppingCategories() {
   try {
     localStorage.setItem(toppingStorageKey, JSON.stringify(toppingCategories));
     localStorage.setItem(menuVersionKey, currentMenuVersion);
+    touchSharedMenu();
     return true;
   } catch {
     alert("The topping categories could not be saved.");
@@ -568,9 +606,88 @@ function saveCategoryOrder() {
   try {
     localStorage.setItem(categoryOrderStorageKey, JSON.stringify(categoryOrder));
     localStorage.setItem(menuVersionKey, currentMenuVersion);
+    touchSharedMenu();
     return true;
   } catch {
     alert("The category order could not be saved.");
+    return false;
+  }
+}
+
+function touchSharedMenu() {
+  if (isApplyingSharedMenu) return;
+  localStorage.setItem(sharedMenuUpdatedAtStorageKey, String(Date.now()));
+  scheduleSharedMenuPush();
+}
+
+function sharedMenuPayload() {
+  return {
+    items: menuItems,
+    toppingCategories,
+    categoryOrder,
+    updatedAt: Number(localStorage.getItem(sharedMenuUpdatedAtStorageKey) || Date.now())
+  };
+}
+
+function applySharedMenu(menu) {
+  if (!menu || !Array.isArray(menu.items)) return false;
+  const remoteUpdatedAt = Number(menu.updatedAt || 0);
+  const localUpdatedAt = Number(localStorage.getItem(sharedMenuUpdatedAtStorageKey) || 0);
+  if (localUpdatedAt && remoteUpdatedAt && remoteUpdatedAt < localUpdatedAt) return false;
+
+  isApplyingSharedMenu = true;
+  menuItems = menu.items.filter(item => !retiredMenuItemIds.includes(item.id));
+  toppingCategories = Array.isArray(menu.toppingCategories) ? menu.toppingCategories : defaultToppingCategories;
+  categoryOrder = Array.isArray(menu.categoryOrder) ? menu.categoryOrder : uniqueCategories(menuItems);
+  localStorage.setItem(menuStorageKey, JSON.stringify(menuItems));
+  localStorage.setItem(toppingStorageKey, JSON.stringify(toppingCategories));
+  localStorage.setItem(categoryOrderStorageKey, JSON.stringify(categoryOrder));
+  localStorage.setItem(menuVersionKey, currentMenuVersion);
+  localStorage.setItem(sharedMenuUpdatedAtStorageKey, String(remoteUpdatedAt || Date.now()));
+  isApplyingSharedMenu = false;
+  refreshMenuViews();
+  renderCart();
+  return true;
+}
+
+async function pushSharedMenu() {
+  const endpoint = sharedOrdersEndpoint("menu");
+  if (!endpoint) return false;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ menu: sharedMenuPayload() })
+    });
+    if (!response.ok) throw new Error("Menu was not accepted.");
+    updateSharedOrdersStatus("Menu changes saved for all devices.");
+    return true;
+  } catch {
+    updateSharedOrdersStatus("Menu changes are saved on this device. Shared menu will retry when online.");
+    return false;
+  }
+}
+
+function scheduleSharedMenuPush() {
+  if (!sharedOrdersUrl || isApplyingSharedMenu) return;
+  clearTimeout(sharedMenuPushTimer);
+  sharedMenuPushTimer = setTimeout(pushSharedMenu, 600);
+}
+
+async function pullSharedMenu() {
+  const endpoint = sharedOrdersEndpoint("menu");
+  if (!endpoint) return false;
+
+  try {
+    const response = await fetch(endpoint, { cache: "no-store" });
+    if (!response.ok) throw new Error("Shared menu was not available.");
+    const data = await response.json();
+    const applied = applySharedMenu(data.menu);
+    updateSharedOrdersStatus(applied ? "Latest menu loaded for this device." : "Shared menu checked. This device is up to date.");
+    return applied;
+  } catch {
+    updateSharedOrdersStatus("Shared menu could not update. This device will keep its local menu.");
     return false;
   }
 }
@@ -795,6 +912,7 @@ function getTotals() {
 }
 
 function renderCart() {
+  saveCart();
   if (cart.length === 0) {
     $("#orderList").innerHTML = `<p class="empty">No items yet. Choose something delicious.</p>`;
   } else {
@@ -1090,9 +1208,9 @@ function updateSharedOrdersStatus(message = "") {
   if (message) {
     status.textContent = message;
   } else if (sharedOrdersUrl && pendingCount) {
-    status.textContent = `Shared history connected. ${pendingCount} order${pendingCount === 1 ? "" : "s"} waiting to send.`;
+    status.textContent = `Shared history and menu connected. ${pendingCount} order${pendingCount === 1 ? "" : "s"} waiting to send.`;
   } else if (sharedOrdersUrl) {
-    status.textContent = "Shared history connected. Orders will sync on this device.";
+    status.textContent = "Shared history and menu connected. New devices can load these changes.";
   } else if (pendingCount) {
     status.textContent = `${pendingCount} order${pendingCount === 1 ? "" : "s"} waiting to email when the internet works.`;
   } else {
@@ -1220,6 +1338,7 @@ function saveSharedOrdersUrl(event) {
   updateSharedOrdersStatus(sharedOrdersUrl ? "Shared history link saved." : "Shared history link removed.");
   retryPendingOrderDeliveries();
   pullSharedOrderHistory();
+  pullSharedMenu();
 }
 
 function orderSummaryMarkup(order) {
@@ -1288,6 +1407,7 @@ function submitOrder(event) {
   submittedOrders.unshift(order);
   saveOrderHistory();
   cart = [];
+  clearSavedCart();
   $("#checkoutForm").reset();
   checkoutStep = 0;
   renderCart();
@@ -1823,9 +1943,12 @@ function showPage(pageName) {
 }
 
 function returnToHomeAfterInactivity() {
+  if (cart.length > 0) {
+    resetInactivityTimer();
+    return;
+  }
   activeCustomerCategory = null;
   checkoutStep = 0;
-  cart = [];
   $("#checkoutForm").reset();
   closeToppingModal();
   closeEditItem();
@@ -1911,6 +2034,7 @@ on("#checkoutNextBtn", "click", nextCheckoutStep);
 on("#checkoutBackBtn", "click", previousCheckoutStep);
 on("#clearCartBtn", "click", () => {
   cart = [];
+  clearSavedCart();
   checkoutStep = 0;
   renderCart();
 });
@@ -1934,6 +2058,7 @@ applyLanguage();
 updateSharedOrdersStatus();
 retryPendingOrderDeliveries();
 pullSharedOrderHistory();
+pullSharedMenu();
 resetInactivityTimer();
 window.addEventListener("online", retryPendingOrderDeliveries);
 
@@ -1950,6 +2075,7 @@ setInterval(() => {
 
 setInterval(retryPendingOrderDeliveries, 30000);
 setInterval(pullSharedOrderHistory, 60000);
+setInterval(pullSharedMenu, 60000);
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
   navigator.serviceWorker.register("./service-worker.js").catch(() => {});

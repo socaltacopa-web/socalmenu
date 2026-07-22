@@ -1,7 +1,13 @@
 const ORDER_EMAIL = "so.cal.taco.pa@gmail.com";
 const SHEET_NAME = "Orders";
+const MENU_PROPERTY = "SOCAL_TACOS_SHARED_MENU";
 
-function doGet() {
+function doGet(event) {
+  const action = event && event.parameter && event.parameter.action;
+  if (action === "menu") {
+    return jsonResponse({ menu: getSharedMenu() });
+  }
+
   const sheet = getOrdersSheet();
   const rows = sheet.getDataRange().getValues();
   const orders = rows.slice(1).map(row => {
@@ -17,6 +23,11 @@ function doGet() {
 
 function doPost(event) {
   const body = JSON.parse(event.postData.contents || "{}");
+  if (body.menu) {
+    saveSharedMenu(body.menu);
+    return jsonResponse({ ok: true, menu: body.menu });
+  }
+
   const order = body.order;
   if (!order || !order.id) return jsonResponse({ ok: false, error: "Missing order" });
 
@@ -40,6 +51,26 @@ function doPost(event) {
   }
 
   return jsonResponse({ ok: true, order });
+}
+
+function getSharedMenu() {
+  const saved = PropertiesService.getScriptProperties().getProperty(MENU_PROPERTY);
+  if (!saved) return null;
+  try {
+    return JSON.parse(saved);
+  } catch (error) {
+    return null;
+  }
+}
+
+function saveSharedMenu(menu) {
+  const nextMenu = {
+    items: Array.isArray(menu.items) ? menu.items : [],
+    toppingCategories: Array.isArray(menu.toppingCategories) ? menu.toppingCategories : [],
+    categoryOrder: Array.isArray(menu.categoryOrder) ? menu.categoryOrder : [],
+    updatedAt: Number(menu.updatedAt || Date.now())
+  };
+  PropertiesService.getScriptProperties().setProperty(MENU_PROPERTY, JSON.stringify(nextMenu));
 }
 
 function getOrdersSheet() {

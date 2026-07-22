@@ -1,6 +1,7 @@
-Shared Order History Setup
+Shared Order History And Menu Setup
 
 The kiosk can now keep unsent email orders and retry them automatically.
+The kiosk can also share menu edits across devices after the shared link is connected.
 
 To make order history show on every device:
 
@@ -16,3 +17,13 @@ To make order history show on every device:
 10. Tap Save Shared History Link on each device.
 
 After that, new orders will be saved online, emailed to so.cal.taco.pa@gmail.com, and pulled into Order History on connected devices.
+Owner menu changes will also save to the shared link, so new devices can load the latest menu instead of only the starter menu.
+
+If you already deployed the Apps Script before this menu-sync update:
+
+1. Open the Apps Script project again.
+2. Replace the code with the newest shared-order-history-google-apps-script.js file.
+3. Click Deploy > Manage deployments.
+4. Edit the current deployment.
+5. Choose New version.
+6. Click Deploy.
