@@ -62,6 +62,7 @@ let lastOrder = null;
 let pendingToppingItemId = null;
 let orderSummaryTimer = null;
 let checkoutStep = 0;
+let inactivityTimer = null;
 const categorySlideIndexes = {};
 let activeCustomerCategory = null;
 let currentLanguage = localStorage.getItem(languageStorageKey) || "en";
@@ -1941,6 +1942,32 @@ function showPage(pageName) {
   }
 }
 
+function returnToHomeAfterInactivity() {
+  if (cart.length > 0) {
+    resetInactivityTimer();
+    return;
+  }
+  activeCustomerCategory = null;
+  checkoutStep = 0;
+  $("#checkoutForm").reset();
+  closeToppingModal();
+  closeEditItem();
+  closeOrderSummary();
+  showPage("order");
+  renderMenu();
+  renderCart();
+  renderCheckoutStep();
+}
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(returnToHomeAfterInactivity, 5 * 60 * 1000);
+}
+
+["click", "touchstart", "keydown", "input", "change", "pointerdown"].forEach(eventName => {
+  document.addEventListener(eventName, resetInactivityTimer, { passive: true });
+});
+
 document.addEventListener("click", event => {
   const addId = event.target.dataset.add;
   const addCardId = event.target.closest("[data-add-card]")?.dataset.addCard;
@@ -2032,6 +2059,7 @@ updateSharedOrdersStatus();
 retryPendingOrderDeliveries();
 pullSharedOrderHistory();
 pullSharedMenu();
+resetInactivityTimer();
 window.addEventListener("online", retryPendingOrderDeliveries);
 
 setInterval(() => {
@@ -2045,20 +2073,10 @@ setInterval(() => {
   updateCategorySlides();
 }, 8000);
 
-setInterval(() => {
-  if (cart.length === 0) retryPendingOrderDeliveries();
-}, 30000);
+setInterval(retryPendingOrderDeliveries, 30000);
+setInterval(pullSharedOrderHistory, 60000);
+setInterval(pullSharedMenu, 60000);
 
-setInterval(() => {
-  if (cart.length === 0) pullSharedOrderHistory();
-}, 60000);
-
-setInterval(() => {
-  if (cart.length === 0) pullSharedMenu();
-}, 60000);
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.getRegistrations()
-    .then(registrations => registrations.forEach(registration => registration.unregister()))
-    .catch(() => {});
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("./service-worker.js").catch(() => {});
 }

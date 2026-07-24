@@ -14,6 +14,7 @@ const defaultMenuItems = [
   { id: "la-dog", name: "La dog", category: "HOT DOG", price: 6, desc: "SoCal-style LA dog.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" },
   { id: "cali-burger", name: "Cali Burger", category: "BURGERS", price: 13, desc: "Comes with animal fries or plain fries. Full size has 3 patties, avocado, lettuce, tomato, grilled onions, and cheese.", image: "", toppingCategoryIds: ["burger-toppings"], variants: [{ name: "JR Cali Burger", price: 13 }, { name: "Cali Burger", price: 16 }] },
   { id: "socal-bowl", name: "SoCal Bowl", category: "BOWLS", price: 16, desc: "Rice, beans, toppings, guac, and meat priced like large burritos.", image: "", toppingCategoryIds: ["bowl-toppings"], variants: [{ name: "Chicken", price: 16 }, { name: "Pork", price: 16 }, { name: "Chorizo", price: 17 }, { name: "Ground Beef", price: 17 }, { name: "Al Pastor", price: 17 }, { name: "Barbacoa", price: 19 }, { name: "Tongue", price: 19 }, { name: "Steak", price: 20 }, { name: "Lamb", price: 20 }, { name: "Steak and Shrimp", price: 20 }] },
+  { id: "fajitas", name: "Fajitas", category: "FAJITAS", price: 18, desc: "Hot fajitas with peppers and onions. Choose rice, beans, or rice and beans free. Includes taco toppings.", image: "socal-fajitas.jpg", toppingCategoryIds: ["fajita-free-sides", "taco-toppings"], variants: [{ name: "Chicken Fajitas", price: 18 }, { name: "Pork Fajitas", price: 18 }, { name: "Steak Fajitas", price: 18 }, { name: "Shrimp Fajitas", price: 18 }, { name: "Steak and Shrimp Fajitas", price: 18 }] },
   { id: "lamb-birria-taco", name: "Lamb birria Taco", category: "TACOS", price: 7, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CXB3QK7QRCF6INZUPGE35VI5.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Lamb Birria Taco", price: 7 }, { name: "3 Lamb Birria Tacos", price: 18 }] },
   { id: "shrimp-steak-tacos", name: "Shrimp and steak tacos", category: "TACOS", price: 7, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/7MLVGRNLW6CBAWXV5BUWCNKS.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Shrimp and Steak Taco", price: 7 }, { name: "3 Shrimp and Steak Tacos", price: 18 }] },
   { id: "steak-tacos", name: "Steak tacos", category: "TACOS", price: 7, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Steak Taco", price: 7 }, { name: "3 Steak Tacos", price: 18 }] },
@@ -32,6 +33,7 @@ const defaultToppingCategories = [
   { id: "taco-toppings", name: "Toppings", options: ["corn tortilla Shell", "flour tortilla Shell", "Romain Lettuce Leaf Shell", "cilantro", "melted chesse", "lime", "Pickled Onions", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", "sour cream", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
   { id: "no-shell-toppings", name: "Toppings", options: ["cilantro", "melted chesse", "lime", "Pickled Onions", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", "sour cream", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
   { id: "quesadilla-meats", name: "Quesadilla Meat", options: ["No meat", "Chicken", "Pork", "Chorizo", "Ground Beef", "Al Pastor", "Vegan Chorizo", "Barbacoa", "Tongue", "Steak", "Lamb", "Steak and Shrimp"] },
+  { id: "fajita-free-sides", name: "Free Side Choice", options: ["Rice", "Beans", "Rice and Beans"] },
   { id: "quesadilla-toppings", name: "Quesadilla Toppings", options: ["cilantro", "melted chesse", "lime", "Pickled Onions", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", "sour cream", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
   { id: "asada-fries-toppings", name: "Asada Fries Toppings", options: ["cilantro", "melted chesse", "lime", "Pickled Onions", "Mild salsa", "Spicy Habanero", "Very Spicy Chili De Arbol", "sour cream", { name: "5oz Small Guacamole And Chips", price: 5 }, { name: "16oz Large Guac and chips", price: 7 }] },
   { id: "burger-toppings", name: "Burger Toppings", options: ["lettuce", "tomato", "Pickled Onions", "grilled onions", "cheese", "sour cream", "Mild salsa", "Spicy Habanero", { name: "5oz Small Guacamole And Chips", price: 5 }] },
@@ -50,7 +52,7 @@ const sharedMenuUpdatedAtStorageKey = "socalTacosSharedMenuUpdatedAt";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
-const currentMenuVersion = "socal-tacos-menu-2026-07-13-one-page-counter-menu";
+const currentMenuVersion = "socal-tacos-menu-2026-07-24-fajitas-top-18";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -635,9 +637,19 @@ function applySharedMenu(menu) {
   if (localUpdatedAt && remoteUpdatedAt && remoteUpdatedAt < localUpdatedAt) return false;
 
   isApplyingSharedMenu = true;
-  menuItems = menu.items.filter(item => !retiredMenuItemIds.includes(item.id));
-  toppingCategories = Array.isArray(menu.toppingCategories) ? menu.toppingCategories : defaultToppingCategories;
-  categoryOrder = Array.isArray(menu.categoryOrder) ? menu.categoryOrder : uniqueCategories(menuItems);
+  const remoteItems = removeRetiredMenuItems(normalizeMenuItems(menu.items)).items;
+  const starterUpdatedRemoteItems = applyStarterMenuUpdates(remoteItems);
+  const sharedItemsWithStarters = addMissingStarterItems(starterUpdatedRemoteItems).items;
+  menuItems = fillMissingItemImages(sharedItemsWithStarters).items;
+  const remoteToppingCategories = Array.isArray(menu.toppingCategories) ? menu.toppingCategories : [];
+  toppingCategories = [
+    ...remoteToppingCategories,
+    ...defaultToppingCategories.filter(defaultCategory => !remoteToppingCategories.some(category => category.id === defaultCategory.id))
+  ];
+  categoryOrder = Array.isArray(menu.categoryOrder) ? [
+    ...menu.categoryOrder,
+    ...uniqueCategories(menuItems).filter(category => !menu.categoryOrder.includes(category))
+  ] : uniqueCategories(menuItems);
   localStorage.setItem(menuStorageKey, JSON.stringify(menuItems));
   localStorage.setItem(toppingStorageKey, JSON.stringify(toppingCategories));
   localStorage.setItem(categoryOrderStorageKey, JSON.stringify(categoryOrder));
@@ -701,6 +713,9 @@ function orderedCategories() {
     ...categoryOrder.filter(category => currentCategories.includes(category)),
     ...currentCategories.filter(category => !categoryOrder.includes(category))
   ];
+  if (currentCategories.includes("FAJITAS")) {
+    categoryOrder = ["FAJITAS", ...categoryOrder.filter(category => category !== "FAJITAS")];
+  }
   return categoryOrder;
 }
 
