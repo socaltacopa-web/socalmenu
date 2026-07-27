@@ -1308,20 +1308,31 @@ async function deliverOrder(order, showAlert = false) {
     if (sharedSent) {
       removePendingOrderDelivery(order.id);
       if (showAlert) alert("Order sent to shared history.");
+      updateSharedOrdersStatus("Order sent to email and shared history.");
+      return true;
+    }
+
+    const fallbackEmailSent = await sendOrderEmailNow(order, showAlert);
+    if (fallbackEmailSent) {
+      removePendingOrderDelivery(order.id);
+      updateSharedOrdersStatus("Order email sent. Shared history link needs to be checked.");
       return true;
     }
 
     queueOrderDelivery(order);
+    updateSharedOrdersStatus("Order is saved on this device, but email did not send. Check the shared history link and internet.");
     return false;
   }
 
   const emailSent = await sendOrderEmailNow(order, showAlert);
   if (emailSent) {
     removePendingOrderDelivery(order.id);
+    updateSharedOrdersStatus("Order email sent.");
     return true;
   }
 
   queueOrderDelivery(order);
+  updateSharedOrdersStatus("Order is saved on this device, but email did not send. Check the internet.");
   return false;
 }
 
