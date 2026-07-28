@@ -250,6 +250,53 @@ textarea {
   min-width: 64px;
 }
 
+.featured-menu-card {
+  grid-column: 1 / -1;
+  min-height: 260px;
+  display: grid;
+  grid-template-columns: minmax(280px, .8fr) 1fr auto;
+  align-items: stretch;
+  background: linear-gradient(135deg, rgba(38, 201, 224, .12), rgba(235, 34, 148, .16)), var(--panel);
+  border-color: rgba(38, 201, 224, .55);
+}
+
+.featured-menu-card .menu-photo {
+  height: 100%;
+  min-height: 260px;
+}
+
+.featured-menu-card .menu-card-body {
+  justify-content: center;
+  padding: 22px;
+}
+
+.featured-menu-card h3 {
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1;
+}
+
+.featured-menu-card .item-description,
+.featured-menu-card .item-detail {
+  font-size: 1.15rem;
+}
+
+.featured-menu-card .menu-card-footer {
+  min-width: 190px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding: 18px;
+}
+
+.featured-menu-card .price {
+  font-size: 2rem;
+}
+
+.featured-menu-card .add-button {
+  min-height: 72px;
+  font-size: 1.35rem;
+}
+
 .category-columns {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }

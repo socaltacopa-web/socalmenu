@@ -11,6 +11,7 @@ const defaultMenuItems = [
   { id: "vegan-chorizo-tacos", name: "Vegan chorizo tacos", category: "TACOS", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L67FL2ATZQSUAGLNJNUABZC3.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Vegan Chorizo Taco", price: 6 }, { name: "3 Vegan Chorizo Tacos", price: 16 }] },
   { id: "ground-beef-tacos", name: "Ground Beef tacos", category: "TACOS", price: 6, desc: "Choose one taco or a three taco plate.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Ground Beef Taco", price: 6 }, { name: "3 Ground Beef Tacos", price: 15 }] },
   { id: "lengua-tacos", name: "(Lengua) beef Tongue tacos", category: "TACOS", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CK476NVFAZAHSSFDGS4T35S6.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Lengua Taco", price: 6 }, { name: "3 Lengua Tacos", price: 16 }], badge: "Sale" },
+  { id: "beef-birria-tacos", name: "Beef Birria Tacos", category: "TACOS", price: 18, desc: "Three beef birria tacos with consome. Choose taco toppings.", image: "socal-beef-birria-tacos.webp", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "3 Beef Birria Tacos", price: 18 }], badge: "Featured", featuredHome: true },
   { id: "la-dog", name: "La dog", category: "HOT DOG", price: 6, desc: "SoCal-style LA dog.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" },
   { id: "cali-burger", name: "Cali Burger", category: "BURGERS", price: 13, desc: "Comes with animal fries or plain fries. Full size has 3 patties, avocado, lettuce, tomato, grilled onions, and cheese.", image: "", toppingCategoryIds: ["burger-toppings"], variants: [{ name: "JR Cali Burger", price: 13 }, { name: "Cali Burger", price: 16 }] },
   { id: "socal-bowl", name: "SoCal Bowl", category: "BOWLS", price: 16, desc: "Rice, beans, toppings, guac, and meat priced like large burritos.", image: "", toppingCategoryIds: ["bowl-toppings"], variants: [{ name: "Chicken", price: 16 }, { name: "Pork", price: 16 }, { name: "Chorizo", price: 17 }, { name: "Ground Beef", price: 17 }, { name: "Al Pastor", price: 17 }, { name: "Barbacoa", price: 19 }, { name: "Tongue", price: 19 }, { name: "Steak", price: 20 }, { name: "Lamb", price: 20 }, { name: "Steak and Shrimp", price: 20 }] },
@@ -49,10 +50,12 @@ const cartStorageKey = "socalTacosActiveCart";
 const pendingOrderDeliveryStorageKey = "socalTacosPendingOrderDelivery";
 const sharedOrdersUrlStorageKey = "socalTacosSharedOrdersUrl";
 const sharedMenuUpdatedAtStorageKey = "socalTacosSharedMenuUpdatedAt";
+const appVersionStorageKey = "socalTacosAppVersion";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
-const currentMenuVersion = "socal-tacos-menu-2026-07-24-fajitas-top-18";
+const currentAppVersion = "2026-07-28-beef-birria-v58";
+const currentMenuVersion = "socal-tacos-menu-2026-07-28-beef-birria";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -703,6 +706,35 @@ async function pullSharedMenu() {
   }
 }
 
+function applyAppVersion(version) {
+  if (!version) return;
+  const savedVersion = localStorage.getItem(appVersionStorageKey);
+  if (savedVersion !== version) {
+    localStorage.setItem(appVersionStorageKey, version);
+  }
+}
+
+async function checkForAppUpdate() {
+  if (location.protocol === "file:" || cart.length > 0) return false;
+
+  try {
+    const response = await fetch(`./site-version.json?check=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) return false;
+    const data = await response.json();
+    const remoteVersion = String(data.version || "");
+    if (!remoteVersion || remoteVersion === currentAppVersion) {
+      applyAppVersion(currentAppVersion);
+      return false;
+    }
+
+    localStorage.setItem(appVersionStorageKey, remoteVersion);
+    window.location.reload();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function uniqueCategories(items = menuItems) {
   return [...new Set(items.map(item => item.category))];
 }
@@ -771,7 +803,11 @@ function renderMenu() {
 
   activeCustomerCategory = null;
   menuGrid.classList.remove("stage-category", "category-item-grid");
-  menuGrid.innerHTML = categories.map((category, categoryIndex) => {
+  const featuredMarkup = visibleItems
+    .filter(item => item.featuredHome && !item.outOfStock)
+    .map((item, index) => featuredItemCardMarkup(item, index))
+    .join("");
+  const categoryMarkup = categories.map((category, categoryIndex) => {
     const items = visibleItems.filter(item => item.category === category);
     const currentIndex = (categorySlideIndexes[category] || 0) % items.length;
     const item = items[currentIndex];
@@ -785,6 +821,7 @@ function renderMenu() {
       </button>
     `;
   }).join("");
+  menuGrid.innerHTML = `${featuredMarkup}${categoryMarkup}`;
 }
 
 function menuItemCardMarkup(item, index) {
@@ -802,6 +839,24 @@ function menuItemCardMarkup(item, index) {
       <div class="menu-card-footer">
         <span class="price">${priceText(item)}</span>
         <button class="add-button" data-add="${item.id}" ${item.outOfStock ? "disabled" : ""}>${item.outOfStock ? t("out") : t("add")}</button>
+      </div>
+    </article>
+  `;
+}
+
+function featuredItemCardMarkup(item, index) {
+  return `
+    <article class="menu-card featured-menu-card" data-add-card="${escapeHtml(item.id)}" data-tap-label="${escapeHtml(t("tapCard"))}" role="button" tabindex="0" style="animation-delay: ${index * 35}ms">
+      ${imageMarkup(imageForItem(item), "menu-photo", "Photo")}
+      <div class="menu-card-body">
+        <span class="menu-badge">${escapeHtml(item.badge || "Featured")}</span>
+        <h3>${escapeHtml(item.name)}</h3>
+        <p class="item-description">${escapeHtml(item.desc)}</p>
+        ${item.variants?.length ? `<p class="item-detail">${t("chooseSize")}</p>` : ""}
+      </div>
+      <div class="menu-card-footer">
+        <span class="price">${priceText(item)}</span>
+        <button class="add-button" data-add="${escapeHtml(item.id)}">${t("add")}</button>
       </div>
     </article>
   `;
@@ -2054,10 +2109,12 @@ renderCart();
 renderSubmittedOrders();
 renderCheckoutStep();
 applyLanguage();
+applyAppVersion(currentAppVersion);
 updateSharedOrdersStatus();
 retryPendingOrderDeliveries();
 pullSharedOrderHistory();
 pullSharedMenu();
+checkForAppUpdate();
 window.addEventListener("online", retryPendingOrderDeliveries);
 
 setInterval(() => {
@@ -2081,6 +2138,10 @@ setInterval(() => {
 
 setInterval(() => {
   if (cart.length === 0) pullSharedMenu();
+}, 60000);
+
+setInterval(() => {
+  checkForAppUpdate();
 }, 60000);
 
 if ("serviceWorker" in navigator) {
