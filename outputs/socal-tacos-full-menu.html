@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SoCal Tacos Full Menu</title>
+<style>
+@page { size: letter; margin: .32in; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #f3f3f3; color: #17110e; font-family: Arial, Helvetica, sans-serif; }
+.download-bar { position: sticky; top: 0; z-index: 20; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #140d12; border-bottom: 5px solid #22c7dc; }
+.download-bar a, .download-bar button { border: 0; border-radius: 8px; background: #ec268f; color: white; font: 900 18px/1 Arial, Helvetica, sans-serif; padding: 14px 18px; text-decoration: none; cursor: pointer; }
+.download-bar a:first-child { background: #22c7dc; color: #120d0a; }
+.page { width: 8.5in; min-height: 11in; margin: 0 auto .25in; padding: .32in; background: white; page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+.header { display: grid; grid-template-columns: 1.65in 1fr 2.1in; gap: .16in; align-items: center; border-bottom: .08in solid #22c7dc; padding-bottom: .12in; margin-bottom: .15in; }
+.logo { width: 1.58in; height: .8in; object-fit: contain; }
+h1 { margin: 0; color: #ec268f; font-size: .5in; line-height: .85; letter-spacing: 0; }
+.subtitle { margin: .04in 0 0; color: #109db0; font-size: .18in; font-weight: 900; text-transform: uppercase; }
+.info { border: 3px solid #ec268f; padding: .08in; text-align: center; font-size: .17in; line-height: 1.18; font-weight: 900; }
+.hero { display: grid; grid-template-columns: 1.25fr .9fr; gap: .18in; align-items: stretch; }
+.hero img { width: 100%; height: 3.7in; object-fit: cover; border: 4px solid #241712; border-radius: .12in; }
+.hero-card { display: flex; flex-direction: column; justify-content: center; border: 4px solid #d99a35; border-radius: .12in; padding: .18in; background: #fff6d8; }
+.hero-card h2 { margin: 0 0 .08in; font-size: .46in; color: #241712; line-height: .9; }
+.hero-card p { margin: .04in 0; font-size: .2in; line-height: 1.2; font-weight: 900; }
+.photo-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: .08in; margin: .16in 0; }
+.photo-strip img { width: 100%; height: .95in; object-fit: cover; border: 3px solid #241712; border-radius: .08in; }
+.columns { display: grid; grid-template-columns: 1fr 1fr; gap: .16in; align-items: start; }
+.card { border: 3px solid #241712; border-radius: .08in; overflow: hidden; margin-bottom: .14in; break-inside: avoid; background: white; }
+.card h2 { margin: 0; padding: .09in .11in; background: #d99a35; color: #120d0a; font-size: .31in; line-height: 1; text-transform: uppercase; letter-spacing: 0; }
+.card h3 { margin: 0; padding: .08in .1in; background: #241712; color: white; font-size: .23in; line-height: 1; text-transform: uppercase; letter-spacing: 0; }
+.item { display: grid; grid-template-columns: 1fr auto; gap: .1in; padding: .085in .105in; border-top: 2px solid #e4d5c2; align-items: start; }
+.item:first-of-type { border-top: 0; }
+.name { display: block; font-size: .18in; line-height: 1.08; font-weight: 900; }
+.desc { display: block; margin-top: .025in; color: #42302a; font-size: .128in; line-height: 1.18; font-weight: 800; }
+.price { color: #ec268f; font-size: .18in; line-height: 1; font-weight: 900; white-space: nowrap; text-align: right; }
+table { width: 100%; border-collapse: collapse; font-size: .142in; line-height: 1.14; font-weight: 900; }
+th { padding: .06in .065in; background: #fff0f8; color: #ec268f; border-bottom: 2px solid #241712; text-align: left; }
+td { padding: .055in .065in; border-bottom: 1.6px solid #ead9ca; vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: .045in; padding: .09in .11in .11in; }
+.chips span { border: 2px solid #22c7dc; background: #eefcff; color: #063c45; border-radius: .08in; padding: .045in .06in; font-size: .118in; line-height: 1.08; font-weight: 900; }
+.note { margin: .12in 0; padding: .1in .12in; border: 3px solid #d99a35; background: #fff6d8; font-size: .16in; line-height: 1.18; font-weight: 900; }
+.footer { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: .1in; margin-top: .12in; padding: .08in; background: #241712; color: white; font-size: .17in; line-height: 1.1; font-weight: 900; text-align: center; }
+.page-label { margin: .08in 0 0; text-align: center; color: #6d5c55; font-size: .12in; font-weight: 900; }
+@media screen { .page { box-shadow: 0 12px 32px rgba(0,0,0,.18); } }
+@media print {
+  body { background: white; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .download-bar { display: none; }
+  .page { width: auto; min-height: 10.36in; margin: 0; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<div class="download-bar">
+<a href="socal-tacos-full-menu.pdf" download>Download PDF</a>
+<button type="button" onclick="window.print()">Print / Save As PDF</button>
+</div>
+
+<section class="page">
+<header class="header">
+<img class="logo" src="socal-tacos-logo.png" alt="SoCal Tacos">
+<div><h1>SoCal Tacos</h1><p class="subtitle">Full menu</p></div>
+<div class="info">Open 9AM-8PM<br>Closed Thursdays<br>Call/Text (714) 791-0186</div>
+</header>
+<div class="hero">
+<img src="socal-fajitas.jpg" alt="Fajitas">
+<div class="hero-card">
+<h2>Fajitas $18</h2>
+<p>Hot fajitas with peppers and onions.</p>
+<p>Free side choice: rice, beans, or rice and beans.</p>
+<p>Includes taco toppings.</p>
+</div>
+</div>
+<div class="photo-strip">
+<img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium" alt="Tacos">
+<img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium" alt="Burrito">
+<img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/7MLVGRNLW6CBAWXV5BUWCNKS.jpeg?width=640&optimize=medium" alt="Bowl">
+<img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/WM6WF22MK2VDFYBNB272YSD5.jpeg?width=640&optimize=medium" alt="Street corn">
+</div>
+<div class="note">Easy ordering: choose your item, choose your meat or size, then choose toppings.</div>
+<footer class="footer"><span>Take a seat</span><span>We will call your name</span><span>@SoCal.TacosPA</span></footer>
+<p class="page-label">Page 1 of 4</p>
+</section>
+
+<section class="page">
+<header class="header">
+<img class="logo" src="socal-tacos-logo.png" alt="SoCal Tacos">
+<div><h1>Tacos</h1><p class="subtitle">One taco or three taco plate</p></div>
+<div class="info">Corn, flour, or lettuce shell<br>Choose toppings below</div>
+</header>
+<div class="columns">
+<div>
+<section class="card"><h2>Tacos</h2>
+<div class="item"><span><span class="name">Chicken Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$5 / $13</span></div>
+<div class="item"><span><span class="name">Pork Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$5 / $13</span></div>
+<div class="item"><span><span class="name">Chorizo Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$6 / $15</span></div>
+<div class="item"><span><span class="name">Al Pastor Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$6 / $15</span></div>
+<div class="item"><span><span class="name">Ground Beef Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$6 / $15</span></div>
+<div class="item"><span><span class="name">Vegan Chorizo Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$6 / $16</span></div>
+<div class="item"><span><span class="name">Tongue Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$6 / $16</span></div>
+</section>
+</div>
+<div>
+<section class="card"><h2>Premium Tacos</h2>
+<div class="item"><span><span class="name">Barbacoa Beef Cheek Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$6 / $16</span></div>
+<div class="item"><span><span class="name">Lamb Birria Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$7 / $18</span></div>
+<div class="item"><span><span class="name">Shrimp and Steak Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$7 / $18</span></div>
+<div class="item"><span><span class="name">Steak Taco</span><span class="desc">1 taco or 3 tacos.</span></span><span class="price">$7 / $18</span></div>
+<div class="item"><span><span class="name">Small Tacos</span><span class="desc">3 small tacos. Chicken, pork, chorizo, ground beef, or steak.</span></span><span class="price">$10-$12</span></div>
+</section>
+<section class="card"><h3>Taco Toppings</h3>
+<div class="chips"><span>Corn tortilla</span><span>Flour tortilla</span><span>Romaine lettuce shell</span><span>Cilantro</span><span>Pickled onions</span><span>Melted cheese</span><span>Lime</span><span>Sour cream</span><span>Mild salsa</span><span>Spicy habanero</span><span>Very spicy Chili De Arbol</span></div>
+</section>
+</div>
+</div>
+<footer class="footer"><span>Open 9AM-8PM</span><span>Closed Thursdays</span><span>(714) 791-0186</span></footer>
+<p class="page-label">Page 2 of 4</p>
+</section>
+
+<section class="page">
+<header class="header">
+<img class="logo" src="socal-tacos-logo.png" alt="SoCal Tacos">
+<div><h1>Mains</h1><p class="subtitle">Burritos, bowls, fries, fajitas</p></div>
+<div class="info">Meat prices listed by item<br>Ask for toppings</div>
+</header>
+<div class="columns">
+<div>
+<section class="card"><h2>Fajitas</h2>
+<div class="item"><span><span class="name">Chicken Fajitas</span><span class="desc">Free rice, beans, or rice and beans.</span></span><span class="price">$18</span></div>
+<div class="item"><span><span class="name">Pork Fajitas</span><span class="desc">Free rice, beans, or rice and beans.</span></span><span class="price">$18</span></div>
+<div class="item"><span><span class="name">Steak Fajitas</span><span class="desc">Free rice, beans, or rice and beans.</span></span><span class="price">$18</span></div>
+<div class="item"><span><span class="name">Shrimp Fajitas</span><span class="desc">Free rice, beans, or rice and beans.</span></span><span class="price">$18</span></div>
+<div class="item"><span><span class="name">Steak and Shrimp Fajitas</span><span class="desc">Free rice, beans, or rice and beans.</span></span><span class="price">$18</span></div>
+</section>
+<section class="card"><h2>Bowls</h2>
+<div class="item"><span><span class="name">SoCal Bowl</span><span class="desc">Rice, beans, toppings, guac, and meat.</span></span><span class="price">$16-$20</span></div>
+<table>
+<tr><th>Meat</th><th>Price</th></tr>
+<tr><td>Chicken or Pork</td><td>$16</td></tr>
+<tr><td>Chorizo, Ground Beef, Al Pastor</td><td>$17</td></tr>
+<tr><td>Barbacoa or Tongue</td><td>$19</td></tr>
+<tr><td>Steak, Lamb, Steak and Shrimp</td><td>$20</td></tr>
+</table>
+</section>
+</div>
+<div>
+<section class="card"><h2>Burritos</h2>
+<table>
+<tr><th>Meat</th><th>JR</th><th>Small</th><th>Large</th></tr>
+<tr><td>Chicken</td><td>$11</td><td>$12</td><td>$16</td></tr>
+<tr><td>Pork</td><td>$11</td><td>$12</td><td>$16</td></tr>
+<tr><td>Chorizo</td><td>$12</td><td>$13</td><td>$17</td></tr>
+<tr><td>Ground Beef</td><td>$12</td><td>$13</td><td>$17</td></tr>
+<tr><td>Al Pastor</td><td>$12</td><td>$13</td><td>$17</td></tr>
+<tr><td>Barbacoa</td><td>$13</td><td>$14</td><td>$19</td></tr>
+<tr><td>Tongue</td><td>$13</td><td>$14</td><td>$19</td></tr>
+<tr><td>Steak</td><td>$15</td><td>$16</td><td>$20</td></tr>
+<tr><td>Lamb</td><td>$15</td><td>$16</td><td>$20</td></tr>
+<tr><td>Steak and Shrimp</td><td>$15</td><td>$16</td><td>$20</td></tr>
+</table>
+</section>
+<section class="card"><h2>Asada Fries</h2>
+<div class="item"><span><span class="name">Asada Fries</span><span class="desc">Fries, cheese, pico, salsa, sour cream, guac, and meat.</span></span><span class="price">$16-$20</span></div>
+</section>
+<section class="card"><h2>Doritos Asada</h2>
+<div class="item"><span><span class="name">Doritos Asada</span><span class="desc">Doritos, cheese, pico, guac, and meat.</span></span><span class="price">$13-$18</span></div>
+</section>
+</div>
+</div>
+<footer class="footer"><span>Open 9AM-8PM</span><span>Closed Thursdays</span><span>(714) 791-0186</span></footer>
+<p class="page-label">Page 3 of 4</p>
+</section>
+
+<section class="page">
+<header class="header">
+<img class="logo" src="socal-tacos-logo.png" alt="SoCal Tacos">
+<div><h1>More</h1><p class="subtitle">Quesadilla, burgers, drinks, sides</p></div>
+<div class="info">Thank you<br>@SoCal.TacosPA</div>
+</header>
+<div class="columns">
+<div>
+<section class="card"><h2>Quesadilla</h2>
+<div class="item"><span><span class="name">Plain Quesadilla</span><span class="desc">Choose meat at no extra charge.</span></span><span class="price">$7</span></div>
+<div class="item"><span><span class="name">Loaded Quesadilla</span><span class="desc">Choose meat at no extra charge.</span></span><span class="price">$14</span></div>
+<div class="chips"><span>No meat</span><span>Chicken</span><span>Pork</span><span>Chorizo</span><span>Ground Beef</span><span>Al Pastor</span><span>Vegan Chorizo</span><span>Barbacoa</span><span>Tongue</span><span>Steak</span><span>Lamb</span><span>Steak and Shrimp</span></div>
+</section>
+<section class="card"><h2>Burgers and Hot Dog</h2>
+<div class="item"><span><span class="name">JR Cali Burger</span><span class="desc">Animal fries or plain fries.</span></span><span class="price">$13</span></div>
+<div class="item"><span><span class="name">Cali Burger</span><span class="desc">Full size with 3 patties, avocado, lettuce, tomato, grilled onions, and cheese.</span></span><span class="price">$16</span></div>
+<div class="item"><span><span class="name">LA Dog</span><span class="desc">SoCal-style LA dog.</span></span><span class="price">$6</span></div>
+</section>
+<section class="card"><h2>Breakfast</h2>
+<div class="item"><span class="name">Breakfast Taco</span><span class="price">$4.50</span></div>
+<div class="item"><span class="name">Breakfast Burrito</span><span class="price">$8</span></div>
+</section>
+</div>
+<div>
+<section class="card"><h2>Drinks</h2>
+<div class="item"><span class="name">Can Drink</span><span class="price">$1</span></div>
+<div class="item"><span class="name">Glass Bottle</span><span class="price">$3</span></div>
+<div class="item"><span><span class="name">Homemade Lemonade / Agua Fresca</span><span class="desc">Watermelon, pineapple, mango, horchata, guava.</span></span><span class="price">$4</span></div>
+</section>
+<section class="card"><h2>Sides</h2>
+<div class="item"><span class="name">Street Corn</span><span class="price">$6</span></div>
+<div class="item"><span class="name">Rice and Beans</span><span class="price">$5</span></div>
+<div class="item"><span class="name">Plain Fries</span><span class="price">$5</span></div>
+<div class="item"><span><span class="name">Guacamole and Chips</span><span class="desc">5oz or 16oz.</span></span><span class="price">$5-$7</span></div>
+</section>
+<section class="card"><h3>No-Shell Toppings</h3>
+<div class="chips"><span>Cilantro</span><span>Pickled onions</span><span>Melted cheese</span><span>Lime</span><span>Sour cream</span><span>Mild salsa</span><span>Spicy habanero</span><span>Very spicy Chili De Arbol</span><span>Guacamole and chips +$5-$7</span></div>
+</section>
+</div>
+</div>
+<div class="note">Take a seat and we will call your name when your food is ready.</div>
+<footer class="footer"><span>Open 9AM-8PM</span><span>Closed Thursdays</span><span>(714) 791-0186</span></footer>
+<p class="page-label">Page 4 of 4</p>
+</section>
+</body>
+</html>
