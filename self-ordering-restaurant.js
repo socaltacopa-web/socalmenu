@@ -54,8 +54,8 @@ const appVersionStorageKey = "socalTacosAppVersion";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
-const currentAppVersion = "2026-07-28-beef-birria-prices-v59";
-const currentMenuVersion = "socal-tacos-menu-2026-07-28-beef-birria-prices";
+const currentAppVersion = "2026-07-29-sold-out-toggle-v60";
+const currentMenuVersion = "socal-tacos-menu-2026-07-29-sold-out-toggle";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -1528,7 +1528,7 @@ function renderOwnerTools() {
     : `<p class="empty">Create topping categories first.</p>`;
 
   $("#ownerItemList").innerHTML = menuItems.map((item, index) => `
-    <article class="owner-item">
+    <article class="owner-item ${item.outOfStock ? "is-sold-out" : ""}">
       ${imageMarkup(imageForItem(item), "owner-thumb", "No photo")}
       <div>
         <h3>${escapeHtml(item.name)}</h3>
@@ -1559,6 +1559,9 @@ function renderOwnerTools() {
         </fieldset>
       </div>
       <div class="owner-actions">
+        <button class="${item.outOfStock ? "secondary-button" : "sold-out-button"}" type="button" data-toggle-sold-out="${item.id}">
+          ${item.outOfStock ? "Mark Available" : "Sold Out"}
+        </button>
         <button class="move-button" type="button" data-move-item="${item.id}" data-move-direction="up" ${index === 0 ? "disabled" : ""}>Up</button>
         <button class="move-button" type="button" data-move-item="${item.id}" data-move-direction="down" ${index === menuItems.length - 1 ? "disabled" : ""}>Down</button>
         <button class="secondary-button" type="button" data-edit-item="${item.id}">Edit</button>
@@ -1820,6 +1823,26 @@ function removeOwnerItem(itemId) {
   refreshMenuViews();
 }
 
+function toggleSoldOutItem(itemId) {
+  const item = menuItems.find(menuItem => menuItem.id === itemId);
+  if (!item) return;
+
+  menuItems = menuItems.map(menuItem => {
+    if (menuItem.id !== itemId) return menuItem;
+    if (menuItem.outOfStock) {
+      const updatedItem = { ...menuItem };
+      delete updatedItem.outOfStock;
+      return updatedItem;
+    }
+    return { ...menuItem, outOfStock: true };
+  });
+  cart = cart.filter(line => line.id !== itemId);
+  saveMenuItems();
+  saveCart();
+  renderCart();
+  refreshMenuViews();
+}
+
 function moveOwnerItem(itemId, direction) {
   const currentIndex = menuItems.findIndex(item => item.id === itemId);
   if (currentIndex < 0) return;
@@ -2034,6 +2057,7 @@ document.addEventListener("click", event => {
   const moveDirection = event.target.dataset.moveDirection;
   const modalQtyChange = event.target.dataset.modalQty;
   const removeToppingCategoryId = event.target.dataset.removeToppingCategory;
+  const toggleSoldOutId = event.target.dataset.toggleSoldOut;
   const openCategory = event.target.closest("[data-open-category]")?.dataset.openCategory;
   const closeCategory = event.target.dataset.closeCategory;
 
@@ -2051,6 +2075,7 @@ document.addEventListener("click", event => {
   if (decreaseId) changeQty(decreaseId, -1);
   if (moveItemId) moveOwnerItem(moveItemId, moveDirection);
   if (moveCategory) moveOwnerCategory(moveCategory, moveDirection);
+  if (toggleSoldOutId) toggleSoldOutItem(toggleSoldOutId);
   if (modalQtyChange) {
     const quantityInput = $("#modalItemQty");
     if (quantityInput) {

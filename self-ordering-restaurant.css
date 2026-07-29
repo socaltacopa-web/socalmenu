@@ -1033,6 +1033,16 @@ textarea {
   padding: 14px;
 }
 
+.owner-item.is-sold-out {
+  border-color: rgba(255, 108, 152, .62);
+  background: linear-gradient(135deg, rgba(255, 108, 152, .14), rgba(12, 14, 23, .96));
+}
+
+.owner-item.is-sold-out .owner-thumb {
+  opacity: .55;
+  filter: grayscale(.45);
+}
+
 .owner-actions {
   display: grid;
   gap: 8px;
@@ -1080,7 +1090,8 @@ textarea {
 }
 
 .secondary-button,
-.move-button {
+.move-button,
+.sold-out-button {
   border: 1px solid rgba(31, 200, 223, .5);
   background: rgba(31, 200, 223, .12);
   color: var(--cyan);
@@ -1089,6 +1100,14 @@ textarea {
   padding: 0 12px;
   cursor: pointer;
   font-weight: 800;
+}
+
+.sold-out-button {
+  border-color: rgba(255, 108, 152, .65);
+  background: rgba(255, 108, 152, .18);
+  color: var(--warning);
+  min-height: 46px;
+  font-size: 1rem;
 }
 
 .move-button {
