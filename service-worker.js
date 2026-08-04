@@ -1,4 +1,4 @@
-const CACHE_NAME = "socal-tacos-kiosk-disabled-v60";
+const CACHE_NAME = "socal-tacos-kiosk-disabled-v64";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

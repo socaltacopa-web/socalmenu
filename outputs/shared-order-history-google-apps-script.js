@@ -32,25 +32,50 @@ function doPost(event) {
   if (!order || !order.id) return jsonResponse({ ok: false, error: "Missing order" });
 
   const sheet = getOrdersSheet();
+  const existingRow = findOrderRow(sheet, order.id);
   const rows = sheet.getDataRange().getValues();
-  const exists = rows.some((row, index) => index > 0 && String(row[0]) === String(order.id));
+  const emailStatus = existingRow ? String(rows[existingRow - 1][5] || "") : "";
 
-  if (!exists) {
-    sheet.appendRow([
-      order.id,
-      order.createdAt,
-      order.customerName || "",
-      JSON.stringify(order),
-      Number(order.totals && order.totals.total ? order.totals.total : 0)
-    ]);
-    MailApp.sendEmail({
-      to: ORDER_EMAIL,
-      subject: `SoCal Tacos Order #${order.id}`,
-      body: emailBody(order)
-    });
+  if (!existingRow || emailStatus !== "SENT") {
+    try {
+      MailApp.sendEmail({
+        to: ORDER_EMAIL,
+        subject: `SoCal Tacos Order #${order.id}`,
+        body: emailBody(order)
+      });
+    } catch (error) {
+      if (existingRow) {
+        sheet.getRange(existingRow, 6).setValue("FAILED");
+        sheet.getRange(existingRow, 7).setValue(String(error && error.message ? error.message : error));
+      }
+      return jsonResponse({ ok: false, emailed: false, error: String(error && error.message ? error.message : error) });
+    }
+
+    if (existingRow) {
+      sheet.getRange(existingRow, 6).setValue("SENT");
+      sheet.getRange(existingRow, 7).setValue("");
+    } else {
+      sheet.appendRow([
+        order.id,
+        order.createdAt,
+        order.customerName || "",
+        JSON.stringify(order),
+        Number(order.totals && order.totals.total ? order.totals.total : 0),
+        "SENT",
+        ""
+      ]);
+    }
   }
 
-  return jsonResponse({ ok: true, order });
+  return jsonResponse({ ok: true, emailed: true, order });
+}
+
+function findOrderRow(sheet, orderId) {
+  const rows = sheet.getDataRange().getValues();
+  for (let index = 1; index < rows.length; index += 1) {
+    if (String(rows[index][0]) === String(orderId)) return index + 1;
+  }
+  return 0;
 }
 
 function getSharedMenu() {
@@ -77,7 +102,10 @@ function getOrdersSheet() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["Order ID", "Created At", "Customer", "Order JSON", "Total"]);
+    sheet.appendRow(["Order ID", "Created At", "Customer", "Order JSON", "Total", "Email Status", "Email Error"]);
+  } else if (sheet.getLastColumn() < 7) {
+    sheet.getRange(1, 6).setValue("Email Status");
+    sheet.getRange(1, 7).setValue("Email Error");
   }
   return sheet;
 }

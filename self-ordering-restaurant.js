@@ -12,6 +12,7 @@ const defaultMenuItems = [
   { id: "ground-beef-tacos", name: "Ground Beef tacos", category: "TACOS", price: 6, desc: "Choose one taco or a three taco plate.", image: "", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Ground Beef Taco", price: 6 }, { name: "3 Ground Beef Tacos", price: 15 }] },
   { id: "lengua-tacos", name: "(Lengua) beef Tongue tacos", category: "TACOS", price: 6, desc: "Choose one taco or a three taco plate.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CK476NVFAZAHSSFDGS4T35S6.jpeg?width=640&optimize=medium", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Lengua Taco", price: 6 }, { name: "3 Lengua Tacos", price: 16 }], badge: "Sale" },
   { id: "beef-birria-tacos", name: "Beef Birria Tacos", category: "TACOS", price: 7, desc: "Beef birria tacos with consome. Choose one taco or a three taco plate.", image: "socal-beef-birria-tacos.webp", toppingCategoryIds: ["taco-toppings"], variants: [{ name: "1 Beef Birria Taco", price: 7 }, { name: "3 Beef Birria Tacos", price: 18 }], badge: "Featured", featuredHome: true },
+  { id: "birria-ramen", name: "Birria Ramen", category: "BIRRIA RAMEN", price: 18, desc: "Warm birria ramen with consome. Choose any meat and toppings without tortilla or lettuce shell options.", image: "socal-birria-ramen.jpg", toppingCategoryIds: ["no-shell-toppings"], variants: [{ name: "Chicken", price: 18 }, { name: "Pork", price: 18 }, { name: "Chorizo", price: 18 }, { name: "Ground Beef", price: 18 }, { name: "Al Pastor", price: 18 }, { name: "Vegan Chorizo", price: 18 }, { name: "Barbacoa", price: 18 }, { name: "Tongue", price: 18 }, { name: "Steak", price: 18 }, { name: "Lamb", price: 18 }, { name: "Steak and Shrimp", price: 18 }] },
   { id: "la-dog", name: "La dog", category: "HOT DOG", price: 6, desc: "SoCal-style LA dog.", image: "https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" },
   { id: "cali-burger", name: "Cali Burger", category: "BURGERS", price: 13, desc: "Comes with animal fries or plain fries. Full size has 3 patties, avocado, lettuce, tomato, grilled onions, and cheese.", image: "", toppingCategoryIds: ["burger-toppings"], variants: [{ name: "JR Cali Burger", price: 13 }, { name: "Cali Burger", price: 16 }] },
   { id: "socal-bowl", name: "SoCal Bowl", category: "BOWLS", price: 16, desc: "Rice, beans, toppings, guac, and meat priced like large burritos.", image: "", toppingCategoryIds: ["bowl-toppings"], variants: [{ name: "Chicken", price: 16 }, { name: "Pork", price: 16 }, { name: "Chorizo", price: 17 }, { name: "Ground Beef", price: 17 }, { name: "Al Pastor", price: 17 }, { name: "Barbacoa", price: 19 }, { name: "Tongue", price: 19 }, { name: "Steak", price: 20 }, { name: "Lamb", price: 20 }, { name: "Steak and Shrimp", price: 20 }] },
@@ -54,8 +55,8 @@ const appVersionStorageKey = "socalTacosAppVersion";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
-const currentAppVersion = "2026-07-29-sold-out-toggle-v60";
-const currentMenuVersion = "socal-tacos-menu-2026-07-29-sold-out-toggle";
+const currentAppVersion = "2026-08-03-birria-ramen-photo-v64";
+const currentMenuVersion = "socal-tacos-menu-2026-08-03-birria-ramen-photo";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -1297,7 +1298,11 @@ async function sendOrderToSharedHistory(order) {
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ order: serializableOrder(order) })
     });
-    return response.ok;
+    if (!response.ok) return false;
+    const result = await response.json().catch(() => null);
+    if (result && result.ok === false) return false;
+    if (result && result.emailed === false) return false;
+    return true;
   } catch {
     return false;
   }
