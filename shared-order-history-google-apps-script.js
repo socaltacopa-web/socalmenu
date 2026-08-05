@@ -7,6 +7,9 @@ function doGet(event) {
   if (action === "menu") {
     return jsonResponse({ menu: getSharedMenu() });
   }
+  if (action === "testEmail") {
+    return sendTestEmail();
+  }
 
   const sheet = getOrdersSheet();
   const rows = sheet.getDataRange().getValues();
@@ -68,6 +71,19 @@ function doPost(event) {
   }
 
   return jsonResponse({ ok: true, emailed: true, order });
+}
+
+function sendTestEmail() {
+  try {
+    MailApp.sendEmail({
+      to: ORDER_EMAIL,
+      subject: "SoCal Tacos test email",
+      body: `This is a test from the SoCal Tacos kiosk at ${new Date().toLocaleString()}.`
+    });
+    return jsonResponse({ ok: true, emailed: true });
+  } catch (error) {
+    return jsonResponse({ ok: false, emailed: false, error: String(error && error.message ? error.message : error) });
+  }
 }
 
 function findOrderRow(sheet, orderId) {

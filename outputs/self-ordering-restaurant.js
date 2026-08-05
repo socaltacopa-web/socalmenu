@@ -55,8 +55,8 @@ const appVersionStorageKey = "socalTacosAppVersion";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
-const currentAppVersion = "2026-08-03-birria-ramen-photo-v64";
-const currentMenuVersion = "socal-tacos-menu-2026-08-03-birria-ramen-photo";
+const currentAppVersion = "2026-08-05-email-test-v65";
+const currentMenuVersion = "socal-tacos-menu-2026-08-05-email-test";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -1426,6 +1426,29 @@ function saveSharedOrdersUrl(event) {
   pullSharedMenu();
 }
 
+async function sendTestEmail() {
+  if (!sharedOrdersUrl) {
+    updateSharedOrdersStatus("Add and save the Google Apps Script link before sending a test email.");
+    alert("Add and save the Google Apps Script link first.");
+    return;
+  }
+
+  updateSharedOrdersStatus("Sending test email...");
+  try {
+    const response = await fetch(sharedOrdersEndpoint("testEmail"), { cache: "no-store" });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result || result.ok === false || result.emailed === false) {
+      throw new Error(result && result.error ? result.error : "Test email failed.");
+    }
+    updateSharedOrdersStatus("Test email sent. Check so.cal.taco.pa@gmail.com.");
+    alert("Test email sent. Check so.cal.taco.pa@gmail.com.");
+  } catch (error) {
+    const message = `Test email failed: ${error && error.message ? error.message : error}`;
+    updateSharedOrdersStatus(message);
+    alert(message);
+  }
+}
+
 function orderSummaryMarkup(order) {
   return `
     <div class="summary-bear" aria-hidden="true">
@@ -2133,6 +2156,7 @@ on("#ownerItemImageFile", "change", updateOwnerImagePreview);
 on("#editItemImageUrl", "input", updateEditImagePreview);
 on("#editItemImageFile", "change", updateEditImagePreview);
 on("#sharedOrdersForm", "submit", saveSharedOrdersUrl);
+on("#testEmailBtn", "click", sendTestEmail);
 if ($("#sharedOrdersUrl")) $("#sharedOrdersUrl").value = sharedOrdersUrl;
 refreshMenuViews();
 renderCart();
