@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-05-email-test-v65",
+  "version": "2026-08-05-email-nocors-v66",
   "updatedAt": "2026-08-05",
-  "note": "Added owner page test email tool."
+  "note": "Added iPad-friendly email fallback."
 }
