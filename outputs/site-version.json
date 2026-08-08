@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-05-email-nocors-v66",
-  "updatedAt": "2026-08-05",
-  "note": "Added iPad-friendly email fallback."
+  "version": "2026-08-08-default-shared-orders-v67",
+  "updatedAt": "2026-08-08",
+  "note": "Added default shared orders link for kitchen devices."
 }

@@ -55,8 +55,9 @@ const appVersionStorageKey = "socalTacosAppVersion";
 const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
-const currentAppVersion = "2026-08-05-email-nocors-v66";
-const currentMenuVersion = "socal-tacos-menu-2026-08-05-email-nocors";
+const defaultSharedOrdersUrl = "https://script.google.com/macros/s/AKfycbxch5jh6vMHliW-ezH2KmP8VRjqQDvH_XiB5iwDWjuwdZMj86WIUAP-M0OarM7g6hRWDQ/exec";
+const currentAppVersion = "2026-08-08-default-shared-orders-v67";
+const currentMenuVersion = "socal-tacos-menu-2026-08-08-default-shared-orders";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -71,7 +72,7 @@ let checkoutStep = 0;
 const categorySlideIndexes = {};
 let activeCustomerCategory = null;
 let currentLanguage = localStorage.getItem(languageStorageKey) || "en";
-let sharedOrdersUrl = localStorage.getItem(sharedOrdersUrlStorageKey) || "";
+let sharedOrdersUrl = localStorage.getItem(sharedOrdersUrlStorageKey) || defaultSharedOrdersUrl;
 let isRetryingOrderDelivery = false;
 let isApplyingSharedMenu = false;
 let sharedMenuPushTimer = null;
@@ -1435,10 +1436,10 @@ async function retryPendingOrderDeliveries() {
 
 function saveSharedOrdersUrl(event) {
   event.preventDefault();
-  sharedOrdersUrl = ($("#sharedOrdersUrl")?.value || "").trim();
-  if (sharedOrdersUrl) localStorage.setItem(sharedOrdersUrlStorageKey, sharedOrdersUrl);
-  else localStorage.removeItem(sharedOrdersUrlStorageKey);
-  updateSharedOrdersStatus(sharedOrdersUrl ? "Shared history link saved." : "Shared history link removed.");
+  sharedOrdersUrl = ($("#sharedOrdersUrl")?.value || "").trim() || defaultSharedOrdersUrl;
+  localStorage.setItem(sharedOrdersUrlStorageKey, sharedOrdersUrl);
+  if ($("#sharedOrdersUrl")) $("#sharedOrdersUrl").value = sharedOrdersUrl;
+  updateSharedOrdersStatus("Shared history link saved. Kitchen orders will share across devices.");
   retryPendingOrderDeliveries();
   pullSharedOrderHistory();
   pullSharedMenu();
