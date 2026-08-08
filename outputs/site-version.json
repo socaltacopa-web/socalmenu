@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-08-default-shared-orders-v67",
+  "version": "2026-08-08-shared-order-form-fallback-v68",
   "updatedAt": "2026-08-08",
-  "note": "Added default shared orders link for kitchen devices."
+  "note": "Added form fallback for shared kitchen orders."
 }

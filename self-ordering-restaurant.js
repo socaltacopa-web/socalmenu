@@ -56,8 +56,8 @@ const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
 const defaultSharedOrdersUrl = "https://script.google.com/macros/s/AKfycbxch5jh6vMHliW-ezH2KmP8VRjqQDvH_XiB5iwDWjuwdZMj86WIUAP-M0OarM7g6hRWDQ/exec";
-const currentAppVersion = "2026-08-08-default-shared-orders-v67";
-const currentMenuVersion = "socal-tacos-menu-2026-08-08-default-shared-orders";
+const currentAppVersion = "2026-08-08-shared-order-form-fallback-v68";
+const currentMenuVersion = "socal-tacos-menu-2026-08-08-shared-order-form-fallback";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -1306,17 +1306,36 @@ async function sendOrderToSharedHistory(order) {
     return true;
   } catch {
     try {
-      await fetch(endpoint, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ order: serializableOrder(order) })
-      });
+      postToHiddenSharedFrame(endpoint, { order: serializableOrder(order) });
       return true;
     } catch {
       return false;
     }
   }
+}
+
+function postToHiddenSharedFrame(url, payload) {
+  const frameName = `sharedOrdersFrame${Date.now()}`;
+  const frame = document.createElement("iframe");
+  const form = document.createElement("form");
+  const input = document.createElement("input");
+  frame.hidden = true;
+  frame.name = frameName;
+  form.hidden = true;
+  form.method = "POST";
+  form.action = url;
+  form.target = frameName;
+  input.type = "hidden";
+  input.name = "payload";
+  input.value = JSON.stringify(payload);
+  form.appendChild(input);
+  document.body.appendChild(frame);
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => {
+    frame.remove();
+    form.remove();
+  }, 12000);
 }
 
 function openHiddenEmailFrame(url) {

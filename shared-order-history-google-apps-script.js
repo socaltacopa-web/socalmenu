@@ -25,7 +25,7 @@ function doGet(event) {
 }
 
 function doPost(event) {
-  const body = JSON.parse(event.postData.contents || "{}");
+  const body = parseRequestBody(event);
   if (body.menu) {
     saveSharedMenu(body.menu);
     return jsonResponse({ ok: true, menu: body.menu });
@@ -71,6 +71,21 @@ function doPost(event) {
   }
 
   return jsonResponse({ ok: true, emailed: true, order });
+}
+
+function parseRequestBody(event) {
+  if (event && event.parameter && event.parameter.payload) {
+    try {
+      return JSON.parse(event.parameter.payload);
+    } catch (error) {
+      return {};
+    }
+  }
+  try {
+    return JSON.parse(event.postData.contents || "{}");
+  } catch (error) {
+    return {};
+  }
 }
 
 function sendTestEmail() {
