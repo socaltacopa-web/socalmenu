@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-08-save-before-email-v69",
+  "version": "2026-08-08-firebase-orders-v70",
   "updatedAt": "2026-08-08",
-  "note": "Save shared orders before attempting email."
+  "note": "Use Firebase Firestore for shared kitchen orders and menu sync."
 }

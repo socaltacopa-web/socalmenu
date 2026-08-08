@@ -196,15 +196,15 @@
           <h2>Shared Order History</h2>
         </div>
       </div>
-      <p class="owner-help">Paste the shared order link here so this iPad and other devices can see the same order history.</p>
+      <p class="owner-help">Firebase is now the main shared order history. The Google link below is only a backup for email testing.</p>
       <form class="owner-form" id="sharedOrdersForm">
         <label class="wide-field">
-          Shared order link
+          Backup Google order link
           <input id="sharedOrdersUrl" type="url" placeholder="Google Apps Script web app URL">
         </label>
-        <button class="primary-button" type="submit">Save Shared History Link</button>
+        <button class="primary-button" type="submit">Save Backup Link</button>
       </form>
-      <button class="secondary-button wide-action" type="button" id="testEmailBtn">Send Test Email</button>
+      <button class="secondary-button wide-action" type="button" id="testEmailBtn">Test Backup Email</button>
       <p class="sync-status" id="sharedOrdersStatus">Shared history is not connected yet.</p>
     </section>
 
@@ -342,6 +342,8 @@
     </div>
   </div>
 
-  <script src="self-ordering-restaurant.js?v=69"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore-compat.js"></script>
+  <script src="self-ordering-restaurant.js?v=70"></script>
 </body>
 </html>

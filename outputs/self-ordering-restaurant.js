@@ -56,8 +56,17 @@ const menuVersionKey = "counterserveMenuVersion";
 const languageStorageKey = "socalTacosLanguage";
 const orderEmailAddress = "so.cal.taco.pa@gmail.com";
 const defaultSharedOrdersUrl = "https://script.google.com/macros/s/AKfycbxch5jh6vMHliW-ezH2KmP8VRjqQDvH_XiB5iwDWjuwdZMj86WIUAP-M0OarM7g6hRWDQ/exec";
-const currentAppVersion = "2026-08-08-save-before-email-v69";
-const currentMenuVersion = "socal-tacos-menu-2026-08-08-save-before-email";
+const firebaseConfig = {
+  apiKey: "AIzaSyCM8-zJViqzYXAZmuxxPNRJkJ1M2jxDvQw",
+  authDomain: "socal-3bec2.firebaseapp.com",
+  projectId: "socal-3bec2",
+  storageBucket: "socal-3bec2.firebasestorage.app",
+  messagingSenderId: "767475505800",
+  appId: "1:767475505800:web:dfb671547c812790e71d3d",
+  measurementId: "G-PG80QSYTY8"
+};
+const currentAppVersion = "2026-08-08-firebase-orders-v70";
+const currentMenuVersion = "socal-tacos-menu-2026-08-08-firebase-orders";
 const retiredMenuItemIds = ["mix-three-tacos"];
 const taxRate = 0.0825;
 let menuItems;
@@ -76,6 +85,9 @@ let sharedOrdersUrl = localStorage.getItem(sharedOrdersUrlStorageKey) || default
 let isRetryingOrderDelivery = false;
 let isApplyingSharedMenu = false;
 let sharedMenuPushTimer = null;
+let firebaseDb = null;
+let firebaseOrdersUnsubscribe = null;
+let firebaseSharedReady = false;
 
 const translations = {
   en: {
@@ -667,6 +679,17 @@ function applySharedMenu(menu) {
 }
 
 async function pushSharedMenu() {
+  if (initializeFirebaseSharedOrders() && firebaseDb) {
+    try {
+      await firebaseMenuDoc().set(sharedMenuPayload(), { merge: true });
+      updateSharedOrdersStatus("Menu changes saved to Firebase for all devices.");
+      return true;
+    } catch {
+      updateSharedOrdersStatus("Menu changes are saved on this device. Firebase menu sync will retry when online.");
+      return false;
+    }
+  }
+
   const endpoint = sharedOrdersEndpoint("menu");
   if (!endpoint) return false;
 
@@ -686,12 +709,24 @@ async function pushSharedMenu() {
 }
 
 function scheduleSharedMenuPush() {
-  if (!sharedOrdersUrl || isApplyingSharedMenu) return;
+  if ((!firebaseSharedReady && !sharedOrdersUrl) || isApplyingSharedMenu) return;
   clearTimeout(sharedMenuPushTimer);
   sharedMenuPushTimer = setTimeout(pushSharedMenu, 600);
 }
 
 async function pullSharedMenu() {
+  if (initializeFirebaseSharedOrders() && firebaseDb) {
+    try {
+      const snapshot = await firebaseMenuDoc().get();
+      const applied = snapshot.exists ? applySharedMenu(snapshot.data()) : false;
+      updateSharedOrdersStatus(applied ? "Latest Firebase menu loaded for this device." : "Firebase menu checked. This device is up to date.");
+      return applied;
+    } catch {
+      updateSharedOrdersStatus("Firebase menu could not update. Check Firestore rules.");
+      return false;
+    }
+  }
+
   const endpoint = sharedOrdersEndpoint("menu");
   if (!endpoint) return false;
 
@@ -1272,12 +1307,95 @@ function sharedOrdersEndpoint(action = "") {
   }
 }
 
+function initializeFirebaseSharedOrders() {
+  if (firebaseSharedReady) return true;
+  if (!window.firebase || !window.firebase.firestore) {
+    updateSharedOrdersStatus("Firebase did not load yet. Orders will stay saved on this device.");
+    return false;
+  }
+
+  try {
+    const app = window.firebase.apps && window.firebase.apps.length
+      ? window.firebase.app()
+      : window.firebase.initializeApp(firebaseConfig);
+    firebaseDb = app.firestore();
+    firebaseSharedReady = true;
+    startFirebaseOrderListener();
+    updateSharedOrdersStatus();
+    return true;
+  } catch (error) {
+    firebaseSharedReady = false;
+    updateSharedOrdersStatus("Firebase could not connect. Check Firestore rules and internet.");
+    return false;
+  }
+}
+
+function firebaseOrdersCollection() {
+  return firebaseDb ? firebaseDb.collection("orders") : null;
+}
+
+function firebaseMenuDoc() {
+  return firebaseDb ? firebaseDb.collection("shared").doc("menu") : null;
+}
+
+function startFirebaseOrderListener() {
+  if (!firebaseDb || firebaseOrdersUnsubscribe) return;
+  firebaseOrdersUnsubscribe = firebaseOrdersCollection()
+    .orderBy("createdAt", "desc")
+    .limit(250)
+    .onSnapshot(snapshot => {
+      const orders = snapshot.docs.map(doc => doc.data());
+      if (orders.length) mergeOrderHistory(orders);
+      updateSharedOrdersStatus("Kitchen orders are live on all devices.");
+    }, () => {
+      updateSharedOrdersStatus("Firebase is connected, but order history could not load. Check Firestore rules.");
+    });
+}
+
+async function sendOrderToFirebase(order) {
+  if (!initializeFirebaseSharedOrders() || !firebaseDb) return false;
+
+  try {
+    const orderData = {
+      ...serializableOrder(order),
+      source: "socal-kiosk",
+      updatedAt: new Date().toISOString()
+    };
+    await firebaseOrdersCollection().doc(String(order.id)).set(orderData, { merge: true });
+    return true;
+  } catch {
+    updateSharedOrdersStatus("Order could not save to Firebase. Check Firestore rules and internet.");
+    return false;
+  }
+}
+
+async function pullFirebaseOrderHistory() {
+  if (!initializeFirebaseSharedOrders() || !firebaseDb) return false;
+
+  try {
+    const snapshot = await firebaseOrdersCollection()
+      .orderBy("createdAt", "desc")
+      .limit(250)
+      .get();
+    mergeOrderHistory(snapshot.docs.map(doc => doc.data()));
+    updateSharedOrdersStatus("Kitchen orders loaded from Firebase.");
+    return true;
+  } catch {
+    updateSharedOrdersStatus("Firebase order history could not load. Check Firestore rules.");
+    return false;
+  }
+}
+
 function updateSharedOrdersStatus(message = "") {
   const status = $("#sharedOrdersStatus");
   if (!status) return;
   const pendingCount = loadPendingOrderDeliveries().length;
   if (message) {
     status.textContent = message;
+  } else if (firebaseSharedReady && pendingCount) {
+    status.textContent = `Firebase connected. ${pendingCount} order${pendingCount === 1 ? "" : "s"} waiting to send.`;
+  } else if (firebaseSharedReady) {
+    status.textContent = "Firebase connected. Kitchen orders and menu changes share across devices.";
   } else if (sharedOrdersUrl && pendingCount) {
     status.textContent = `Shared history and menu connected. ${pendingCount} order${pendingCount === 1 ? "" : "s"} waiting to send.`;
   } else if (sharedOrdersUrl) {
@@ -1347,6 +1465,8 @@ function openHiddenEmailFrame(url) {
 }
 
 async function pullSharedOrderHistory() {
+  if (initializeFirebaseSharedOrders() && firebaseDb) return pullFirebaseOrderHistory();
+
   const endpoint = sharedOrdersEndpoint("orders");
   if (!endpoint) {
     updateSharedOrdersStatus();
@@ -1401,6 +1521,19 @@ async function sendOrderEmailNow(order, showAlert = false) {
 }
 
 async function deliverOrder(order, showAlert = false) {
+  const firebaseSent = await sendOrderToFirebase(order);
+  if (firebaseSent) {
+    removePendingOrderDelivery(order.id);
+    updateSharedOrdersStatus("Order saved to Firebase kitchen history.");
+    sendOrderEmailNow(order).then(emailSent => {
+      updateSharedOrdersStatus(emailSent
+        ? "Order saved to Firebase and email was sent."
+        : "Order saved to Firebase. Email did not send, but kitchen history has the order.");
+    });
+    if (showAlert) alert("Order sent to kitchen history.");
+    return true;
+  }
+
   if (sharedOrdersUrl) {
     const sharedSent = await sendOrderToSharedHistory(order);
     if (sharedSent) {
@@ -2202,6 +2335,7 @@ renderSubmittedOrders();
 renderCheckoutStep();
 applyLanguage();
 applyAppVersion(currentAppVersion);
+initializeFirebaseSharedOrders();
 updateSharedOrdersStatus();
 retryPendingOrderDeliveries();
 pullSharedOrderHistory();
