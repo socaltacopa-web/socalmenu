@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-08-shared-order-form-fallback-v68",
+  "version": "2026-08-08-save-before-email-v69",
   "updatedAt": "2026-08-08",
-  "note": "Added form fallback for shared kitchen orders."
+  "note": "Save shared orders before attempting email."
 }

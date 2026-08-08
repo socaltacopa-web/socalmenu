@@ -39,7 +39,26 @@ function doPost(event) {
   const rows = sheet.getDataRange().getValues();
   const emailStatus = existingRow ? String(rows[existingRow - 1][5] || "") : "";
 
-  if (!existingRow || emailStatus !== "SENT") {
+  let orderRow = existingRow;
+  if (!orderRow) {
+    sheet.appendRow([
+      order.id,
+      order.createdAt,
+      order.customerName || "",
+      JSON.stringify(order),
+      Number(order.totals && order.totals.total ? order.totals.total : 0),
+      "RECEIVED",
+      ""
+    ]);
+    orderRow = sheet.getLastRow();
+  } else {
+    sheet.getRange(orderRow, 2).setValue(order.createdAt);
+    sheet.getRange(orderRow, 3).setValue(order.customerName || "");
+    sheet.getRange(orderRow, 4).setValue(JSON.stringify(order));
+    sheet.getRange(orderRow, 5).setValue(Number(order.totals && order.totals.total ? order.totals.total : 0));
+  }
+
+  if (emailStatus !== "SENT") {
     try {
       MailApp.sendEmail({
         to: ORDER_EMAIL,
@@ -47,27 +66,13 @@ function doPost(event) {
         body: emailBody(order)
       });
     } catch (error) {
-      if (existingRow) {
-        sheet.getRange(existingRow, 6).setValue("FAILED");
-        sheet.getRange(existingRow, 7).setValue(String(error && error.message ? error.message : error));
-      }
+      sheet.getRange(orderRow, 6).setValue("FAILED");
+      sheet.getRange(orderRow, 7).setValue(String(error && error.message ? error.message : error));
       return jsonResponse({ ok: false, emailed: false, error: String(error && error.message ? error.message : error) });
     }
 
-    if (existingRow) {
-      sheet.getRange(existingRow, 6).setValue("SENT");
-      sheet.getRange(existingRow, 7).setValue("");
-    } else {
-      sheet.appendRow([
-        order.id,
-        order.createdAt,
-        order.customerName || "",
-        JSON.stringify(order),
-        Number(order.totals && order.totals.total ? order.totals.total : 0),
-        "SENT",
-        ""
-      ]);
-    }
+    sheet.getRange(orderRow, 6).setValue("SENT");
+    sheet.getRange(orderRow, 7).setValue("");
   }
 
   return jsonResponse({ ok: true, emailed: true, order });
