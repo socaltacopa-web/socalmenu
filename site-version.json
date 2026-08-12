@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-08-firebase-orders-v70",
-  "updatedAt": "2026-08-08",
-  "note": "Use Firebase Firestore for shared kitchen orders and menu sync."
+  "version": "2026-08-12-salmon-picture-v73",
+  "updatedAt": "2026-08-12",
+  "note": "Update salmon picture and keep salmon as a steak-price protein."
 }

@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SoCal Tacos Printable Menu</title>
+  <style>
+    :root {
+      --pink: #ed1f91;
+      --blue: #23c7df;
+      --gold: #dd9d38;
+      --ink: #2b1711;
+      --soft: #fff7ec;
+      --line: #ead7bd;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #f3eadb;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.25;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      background: #111;
+      color: #fff;
+    }
+
+    .toolbar button,
+    .toolbar a {
+      border: 0;
+      border-radius: 8px;
+      padding: 14px 22px;
+      color: #111;
+      background: var(--blue);
+      font-size: 18px;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .book {
+      width: 8.5in;
+      margin: 24px auto;
+    }
+
+    .page {
+      min-height: 11in;
+      padding: 0.34in;
+      margin-bottom: 24px;
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 40px rgba(43, 23, 17, 0.18);
+      page-break-after: always;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding-bottom: 12px;
+      border-bottom: 6px solid var(--gold);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand img {
+      width: 128px;
+      height: 88px;
+      object-fit: contain;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--pink);
+      font-size: 42px;
+      line-height: 0.95;
+    }
+
+    .tagline {
+      margin: 4px 0 0;
+      color: var(--blue);
+      font-size: 18px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .contact {
+      text-align: right;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .contact strong {
+      display: block;
+      color: var(--pink);
+      font-size: 28px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .photo-card {
+      overflow: hidden;
+      border: 3px solid var(--gold);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .photo-card img {
+      display: block;
+      width: 100%;
+      height: 128px;
+      object-fit: cover;
+    }
+
+    .photo-card p {
+      margin: 0;
+      padding: 8px 10px;
+      color: #fff;
+      background: var(--ink);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .picture-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .picture-menu-card {
+      overflow: hidden;
+      min-height: 190px;
+      border: 3px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      break-inside: avoid;
+    }
+
+    .picture-menu-card img {
+      display: block;
+      width: 100%;
+      height: 135px;
+      object-fit: cover;
+    }
+
+    .picture-menu-card strong {
+      display: block;
+      padding: 8px 9px 2px;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.05;
+    }
+
+    .picture-menu-card span {
+      display: block;
+      padding: 0 9px 8px;
+      color: var(--pink);
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .section {
+      margin-top: 12px;
+      padding: 12px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      padding-bottom: 7px;
+      border-bottom: 3px solid var(--gold);
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 30px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .note {
+      color: #5f4030;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .menu-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .menu-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: start;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #c7aa82;
+    }
+
+    .menu-row:last-child { border-bottom: 0; padding-bottom: 0; }
+
+    .item-name {
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .item-desc {
+      margin-top: 2px;
+      color: #5d463b;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .price {
+      min-width: 105px;
+      color: #000;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 18px;
+      margin-top: 6px;
+    }
+
+    .option-grid span,
+    .chips span {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 5px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .highlight {
+      border-color: var(--pink);
+      background: #fff4fa;
+    }
+
+    .compact .menu-row {
+      padding-bottom: 6px;
+    }
+
+    .compact .item-name {
+      font-size: 20px;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--ink);
+      font-size: 18px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    @media print {
+      @page { size: letter; margin: 0; }
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .book { width: auto; margin: 0; }
+      .page {
+        width: 8.5in;
+        min-height: 11in;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button onclick="window.print()">Print / Save PDF</button>
+    <a href="index.html">Open Ordering Website</a>
+  </div>
+
+  <main class="book">
+    <section class="page">
+      <header class="masthead">
+        <div class="brand">
+          <img src="socal-tacos-logo-cropped.png" alt="SoCal Tacos logo">
+          <div>
+            <h1>SoCal Tacos</h1>
+            <p class="tagline">Fresh coastal flavor</p>
+          </div>
+        </div>
+        <div class="contact">
+          Call or Text to Order
+          <strong>(714) 791-0186</strong>
+          Open 9 AM - 8 PM<br>Closed Thursdays
+        </div>
+      </header>
+
+      <div class="feature-grid">
+        <div class="photo-card">
+          <img src="socal-beef-birria-tacos.webp" alt="Beef birria tacos">
+          <p>Beef Birria Tacos</p>
+        </div>
+        <div class="photo-card">
+          <img src="socal-birria-ramen.jpg" alt="Birria ramen">
+          <p>Birria Ramen</p>
+        </div>
+        <div class="photo-card">
+          <img src="socal-fajitas.jpg" alt="Fajitas">
+          <p>Fajitas</p>
+        </div>
+      </div>
+
+      <section class="section highlight">
+        <div class="section-title">
+          <h2>Featured</h2>
+          <span class="note">Big customer favorites</span>
+        </div>
+        <div class="menu-list">
+          <div class="menu-row">
+            <div>
+              <div class="item-name">Fajitas</div>
+              <div class="item-desc">Hot fajitas with peppers and onions. Free side choice: rice, beans, or rice and beans.</div>
+              <div class="chips">
+                <span>Chicken</span><span>Pork</span><span>Steak</span><span>Shrimp</span><span>Steak and Shrimp</span>
+              </div>
+            </div>
+            <div class="price">$18</div>
+          </div>
+          <div class="menu-row">
+            <div>
+              <div class="item-name">Beef Birria Tacos</div>
+              <div class="item-desc">Beef birria tacos with consome.</div>
+            </div>
+            <div class="price">$7 each<br>$18 / 3</div>
+          </div>
+          <div class="menu-row">
+            <div>
+              <div class="item-name">Birria Ramen</div>
+              <div class="item-desc">Warm birria ramen with consome. Choose any meat.</div>
+            </div>
+            <div class="price">$18</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Tacos</h2>
+          <span class="note">Choose 1 taco or 3 tacos</span>
+        </div>
+        <div class="menu-list compact">
+          <div class="menu-row"><div><div class="item-name">Chicken or Pork</div></div><div class="price">$5 each<br>$13 / 3</div></div>
+          <div class="menu-row"><div><div class="item-name">Chorizo, Al Pastor, Ground Beef</div></div><div class="price">$6 each<br>$15 / 3</div></div>
+          <div class="menu-row"><div><div class="item-name">Vegan Chorizo</div></div><div class="price">$6 each<br>$16 / 3</div></div>
+          <div class="menu-row"><div><div class="item-name">Lengua, Barbacoa Beef Cheeks</div></div><div class="price">$6 each<br>$16 / 3</div></div>
+          <div class="menu-row"><div><div class="item-name">Steak, Lamb Birria, Shrimp and Steak</div></div><div class="price">$7 each<br>$18 / 3</div></div>
+          <div class="menu-row"><div><div class="item-name">Small Tacos</div><div class="item-desc">Three small tacos. Chicken, pork, chorizo, ground beef, or steak.</div></div><div class="price">$10<br>Steak $12</div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Taco Toppings</h2>
+          <span class="note">Ask for what you want</span>
+        </div>
+        <div class="chips">
+          <span>Corn tortilla shell</span><span>Flour tortilla shell</span><span>Romaine lettuce leaf shell</span>
+          <span>Cilantro</span><span>Pickled onions</span><span>Melted cheese</span><span>Lime</span>
+          <span>Mild salsa</span><span>Spicy habanero</span><span>Very spicy chile de arbol</span><span>Sour cream</span>
+          <span>Guacamole and chips +$5 small / +$7 large</span>
+        </div>
+      </section>
+    </section>
+
+    <section class="page">
+      <header class="masthead">
+        <div class="brand">
+          <img src="socal-tacos-logo-cropped.png" alt="SoCal Tacos logo">
+          <div>
+            <h1>SoCal Tacos</h1>
+            <p class="tagline">Burritos, bowls, sides, drinks</p>
+          </div>
+        </div>
+        <div class="contact">
+          Call or Text
+          <strong>(714) 791-0186</strong>
+          Pay after food is provided
+        </div>
+      </header>
+
+      <div class="two-col">
+        <section class="section">
+          <div class="section-title"><h2>Burritos</h2></div>
+          <div class="menu-list compact">
+            <div class="menu-row"><div><div class="item-name">Chicken or Pork</div></div><div class="price">JR $11<br>Small $12<br>Large $16</div></div>
+            <div class="menu-row"><div><div class="item-name">Chorizo, Ground Beef, Al Pastor</div></div><div class="price">JR $12<br>Small $13<br>Large $17</div></div>
+            <div class="menu-row"><div><div class="item-name">Barbacoa or Tongue</div></div><div class="price">JR $13<br>Small $14<br>Large $19</div></div>
+            <div class="menu-row"><div><div class="item-name">Steak, Lamb, Steak and Shrimp</div></div><div class="price">JR $15<br>Small $16<br>Large $20</div></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h2>Bowls</h2></div>
+          <div class="menu-list compact">
+            <div class="menu-row"><div><div class="item-name">Chicken or Pork</div></div><div class="price">$16</div></div>
+            <div class="menu-row"><div><div class="item-name">Chorizo, Ground Beef, Al Pastor</div></div><div class="price">$17</div></div>
+            <div class="menu-row"><div><div class="item-name">Barbacoa or Tongue</div></div><div class="price">$19</div></div>
+            <div class="menu-row"><div><div class="item-name">Steak, Lamb, Steak and Shrimp</div></div><div class="price">$20</div></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="two-col">
+        <section class="section">
+          <div class="section-title"><h2>Asada Fries</h2></div>
+          <div class="menu-list compact">
+            <div class="menu-row"><div><div class="item-name">Chicken or Pork</div></div><div class="price">$16</div></div>
+            <div class="menu-row"><div><div class="item-name">Chorizo, Ground Beef, Al Pastor</div></div><div class="price">$17</div></div>
+            <div class="menu-row"><div><div class="item-name">Barbacoa or Tongue</div></div><div class="price">$19</div></div>
+            <div class="menu-row"><div><div class="item-name">Steak, Lamb, Steak and Shrimp</div></div><div class="price">$20</div></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h2>Doritos Asada</h2></div>
+          <div class="menu-list compact">
+            <div class="menu-row"><div><div class="item-name">Chicken or Pork</div></div><div class="price">$13</div></div>
+            <div class="menu-row"><div><div class="item-name">Chorizo, Ground Beef, Al Pastor, Vegan Chorizo</div></div><div class="price">$15</div></div>
+            <div class="menu-row"><div><div class="item-name">Barbacoa or Tongue</div></div><div class="price">$16</div></div>
+            <div class="menu-row"><div><div class="item-name">Steak, Lamb, Steak and Shrimp</div></div><div class="price">$18</div></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="two-col">
+        <section class="section">
+          <div class="section-title"><h2>Quesadilla</h2></div>
+          <div class="menu-row">
+            <div>
+              <div class="item-name">Plain or Loaded</div>
+              <div class="item-desc">Choose meat at no extra charge.</div>
+              <div class="chips"><span>No meat</span><span>Chicken</span><span>Pork</span><span>Chorizo</span><span>Ground Beef</span><span>Al Pastor</span><span>Barbacoa</span><span>Tongue</span><span>Steak</span></div>
+            </div>
+            <div class="price">Plain $7<br>Loaded $14</div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><h2>Burgers & Dogs</h2></div>
+          <div class="menu-list compact">
+            <div class="menu-row"><div><div class="item-name">JR Cali Burger</div><div class="item-desc">Animal fries or plain fries.</div></div><div class="price">$13</div></div>
+            <div class="menu-row"><div><div class="item-name">Cali Burger</div><div class="item-desc">3 patties, avocado, lettuce, tomato, grilled onions, cheese.</div></div><div class="price">$16</div></div>
+            <div class="menu-row"><div><div class="item-name">LA Dog</div></div><div class="price">$6</div></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="section">
+        <div class="section-title"><h2>Breakfast, Sides & Drinks</h2></div>
+        <div class="option-grid">
+          <span>Breakfast Taco $4.50</span><span>Breakfast Burrito $8</span>
+          <span>Street Corn $6</span><span>Rice & Beans $5</span>
+          <span>Plain Fries $5</span><span>Guacamole & Chips $5 small / $7 large</span>
+          <span>Can Drink $1</span><span>Glass Bottle $3</span>
+          <span>Homemade Lemonade / Agua Fresca $4</span><span>Agua Frescas: Watermelon, Pineapple, Mango, Horchata, Guava</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Toppings for Bowls, Burritos, Fries & Ramen</h2></div>
+        <div class="chips">
+          <span>Cilantro</span><span>Pickled onions</span><span>Melted cheese</span><span>Lime</span><span>Mild salsa</span>
+          <span>Spicy habanero</span><span>Very spicy chile de arbol</span><span>Sour cream</span><span>Guacamole and chips +$5 small / +$7 large</span>
+        </div>
+      </section>
+
+      <div class="footer-note">For in-person ordering: choose your item, choose meat or size, then choose toppings.</div>
+    </section>
+
+    <section class="page">
+      <header class="masthead">
+        <div class="brand">
+          <img src="socal-tacos-logo-cropped.png" alt="SoCal Tacos logo">
+          <div>
+            <h1>Picture Menu</h1>
+            <p class="tagline">Photos from the ordering website</p>
+          </div>
+        </div>
+        <div class="contact">
+          SoCal Tacos
+          <strong>(714) 791-0186</strong>
+          Point to a picture to order
+        </div>
+      </header>
+
+      <div class="picture-menu-grid">
+        <div class="picture-menu-card">
+          <img src="socal-fajitas.jpg" alt="Fajitas">
+          <strong>Fajitas</strong>
+          <span>$18</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="socal-beef-birria-tacos.webp" alt="Beef birria tacos">
+          <strong>Beef Birria Tacos</strong>
+          <span>$7 each / $18 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="socal-birria-ramen.jpg" alt="Birria ramen">
+          <strong>Birria Ramen</strong>
+          <span>$18</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LNXII34WYGXEFLEWWHRU4NBA.jpeg?width=640&optimize=medium" alt="Chicken taco">
+          <strong>Chicken Taco</strong>
+          <span>$5 each / $13 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/QS2LHOTOLEK64X5NHSKB3VCS.jpeg?width=640&optimize=medium" alt="Pork taco">
+          <strong>Pork Taco</strong>
+          <span>$5 each / $13 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/RLK4VMZBHH3YPI73KFYLMKMM.jpeg?width=640&optimize=medium" alt="Chorizo taco">
+          <strong>Chorizo Taco</strong>
+          <span>$6 each / $15 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ZQFFEBTTRQL6PERXUP7HGWC7.jpeg?width=640&optimize=medium" alt="Al pastor tacos">
+          <strong>Al Pastor Tacos</strong>
+          <span>$6 each / $15 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L67FL2ATZQSUAGLNJNUABZC3.jpeg?width=640&optimize=medium" alt="Vegan chorizo tacos">
+          <strong>Vegan Chorizo Tacos</strong>
+          <span>$6 each / $16 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CK476NVFAZAHSSFDGS4T35S6.jpeg?width=640&optimize=medium" alt="Lengua tacos">
+          <strong>Lengua Tacos</strong>
+          <span>$6 each / $16 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/CXB3QK7QRCF6INZUPGE35VI5.jpeg?width=640&optimize=medium" alt="Lamb birria taco">
+          <strong>Lamb Birria Taco</strong>
+          <span>$7 each / $18 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/7MLVGRNLW6CBAWXV5BUWCNKS.jpeg?width=640&optimize=medium" alt="Shrimp and steak tacos">
+          <strong>Shrimp and Steak Tacos</strong>
+          <span>$7 each / $18 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AFEKHUPXLYOIVPTORSNLUKHI.jpeg?width=640&optimize=medium" alt="Steak tacos">
+          <strong>Steak Tacos</strong>
+          <span>$7 each / $18 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/LXS7VB2T5ZTBFACNLESBXGTI.jpeg?width=640&optimize=medium" alt="Barbacoa beef cheeks">
+          <strong>Barbacoa Beef Cheeks</strong>
+          <span>$6 each / $16 for 3</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/HAEMTJ4ZP25ACOT7VT6ZS3QU.png?width=640&optimize=medium" alt="Burrito">
+          <strong>Burritos / Breakfast Burrito</strong>
+          <span>From $8</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/UM5UDPOAYLWJQIVT7K6TO3MB.jpeg?width=640&optimize=medium" alt="Breakfast taco">
+          <strong>Breakfast Taco</strong>
+          <span>$4.50</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/L2RJACUXOWPSHE4RACMWWANZ.jpeg?width=640&optimize=medium" alt="LA dog">
+          <strong>LA Dog</strong>
+          <span>$6</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/WM6WF22MK2VDFYBNB272YSD5.jpeg?width=640&optimize=medium" alt="Street corn">
+          <strong>Street Corn</strong>
+          <span>$6</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/ULDOA6QPOJG4TP2HLQAGL2LH.jpeg?width=640&optimize=medium" alt="Guacamole and chips">
+          <strong>Guacamole and Chips</strong>
+          <span>$5 small / $7 large</span>
+        </div>
+        <div class="picture-menu-card">
+          <img src="https://148597173.cdn6.editmysite.com/uploads/1/4/8/5/148597173/AIIOTSGQNEBBLTYAJ5VU4KBL.jpeg?width=640&optimize=medium" alt="Homemade drinks">
+          <strong>Homemade Drinks</strong>
+          <span>$4</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
